@@ -2,12 +2,27 @@
 #include <string>
 #include <vector>
 
+#include "index.h"
 #include "inst.h"
+#include "config.h"
+
+std::string path_rend() {
+	std::string line = "";
+	if (PRJ.cur_prj != nullptr) {
+		line += PRJ.cur_prj->name + ">";
+	}
+	return line + ">";
+}
+
+void wrap () {
+
+}
 
 int main() {
+	gcfg::init();
 	while (true)
 	{
-		printf("%c", '.');
+		
 		std::string str;
 		std::cin >> str;
 		std::vector<std::string> cmd(0);
