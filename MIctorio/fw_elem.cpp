@@ -8,13 +8,14 @@ std::map<std::string, std::string> fw::read(const char* path) {
 		std::ofstream of;
 		of.open(path);
 		of.close();
+		f.open(path);
 	}
-	f.open(path);
-	std::string line = "";
-	char* c_buf = new char[256];
-	while (f.read(c_buf, sizeof(c_buf)))
+
+	char buf;
+	std::string line;
+	while (f.read(&buf, sizeof(buf)))
 	{
-		line += c_buf;
+		line += buf;
 	}
 
 	std::map<std::string, std::string> set = std::map<std::string, std::string>();
@@ -54,6 +55,6 @@ void fw::upt(const char* path, std::map<std::string, std::string> set) {
 		lines += pr.first + "@" + pr.second + ";\n";
 	}
 
-	of.write(lines.c_str(), sizeof(lines));
+	of << lines;
 	of.close();
 }
