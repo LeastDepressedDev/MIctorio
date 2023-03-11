@@ -30,5 +30,5 @@ void gcfg::update() {
 }
 
 void gcfg::def() {
-	fw::upt(CFG_FILE_NAME, { {} });
+	fw::upt(CFG_FILE_NAME, gcfg::def_set);
 }

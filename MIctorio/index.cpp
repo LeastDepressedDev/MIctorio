@@ -22,26 +22,40 @@ void wrap () {
 
 }
 
+std::vector<std::string> vec_split(std::string str, char sep) {
+	std::vector<std::string> vec(0);
+	std::string buf = "";
+	for (int i = 0; i < str.length(); i++) {
+		if (str[i] == sep) {
+			vec.push_back(buf);
+			buf = "";
+		}
+		else {
+			buf += str[i];
+		}
+	}
+	vec.push_back(buf);
+	return vec;
+}
+
+std::string in() {
+	std::string buf = "";
+	char a = '0';
+	while (a != '\n')
+	{
+		scanf_s("%c", &a);
+		buf += a;
+	}
+	return buf.substr(1, buf.length() - 2);
+}
+
 int main() {
 	std::cout << WELCOME_MSG << std::endl;
 	gcfg::init();
 	while (true)
 	{
 		std::cout << path_rend();
-		std::string str;
-		std::cin >> str;
-		std::vector<std::string> cmd(0);
-		std::string buf = "";
-		for (int i = 0; i < str.length(); i++) {
-			if (str[i] == ' ') {
-				cmd.push_back(buf);
-				buf = "";
-			}
-			else {
-				buf += str[i];
-			}
-		}
-		cmd.push_back(buf);
-		callCmd(glob_app::stage, cmd);
+		std::string src = in();
+		callCmd(glob_app::stage, vec_split(src, ' '));
 	}
 }

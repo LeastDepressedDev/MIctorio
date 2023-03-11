@@ -34,6 +34,8 @@ inline void callCmd(e_cmd_section sec, std::vector<std::string> cmd) {
 	for (command c : cmd_vec) {
 		if (c.sId == cmd[0]) {
 			c.f(cmd);
+			return;
 		}
 	}
+	std::cout << "This command doesn't exists!" << std::endl;
 }
