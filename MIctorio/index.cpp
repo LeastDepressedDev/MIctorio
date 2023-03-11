@@ -3,15 +3,19 @@
 #include <vector>
 
 #include "index.h"
-#include "inst.h"
 #include "config.h"
+
+#define WELCOME_MSG "######################################\n#       Mod Interface For Factorio   #\n#    by Sirtage(qigan)               #\n#          Made in Russia            #\n######################################\n Type >help to see for commands."
+
+Project* glob_app::cur_prj = nullptr;
+e_cmd_section glob_app::stage = e_cmd_section::mwind;
 
 std::string path_rend() {
 	std::string line = "";
-	if (PRJ.cur_prj != nullptr) {
-		line += PRJ.cur_prj->name + ">";
+	if (glob_app::cur_prj != nullptr) {
+		line += glob_app::cur_prj->name;
 	}
-	return line + ">";
+	return line + GEN_SEPARATOR;
 }
 
 void wrap () {
@@ -19,10 +23,11 @@ void wrap () {
 }
 
 int main() {
+	std::cout << WELCOME_MSG << std::endl;
 	gcfg::init();
 	while (true)
 	{
-		
+		std::cout << path_rend();
 		std::string str;
 		std::cin >> str;
 		std::vector<std::string> cmd(0);
@@ -37,6 +42,6 @@ int main() {
 			}
 		}
 		cmd.push_back(buf);
-		callCmd(cmd);
+		callCmd(glob_app::stage, cmd);
 	}
 }

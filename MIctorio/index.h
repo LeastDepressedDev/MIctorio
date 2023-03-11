@@ -1,7 +1,9 @@
 #pragma once
 #include <iostream>
+#include "inst.h"
 #include "Project.h"
 
-struct {
-	Project* cur_prj = nullptr;
-} PRJ;
+namespace glob_app {
+	extern Project* cur_prj;
+	extern e_cmd_section stage;
+}
