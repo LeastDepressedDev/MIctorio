@@ -2,10 +2,23 @@
 #include "fw_elem.h"
 #include <fstream>
 
-#define CFG_FILE_NAME "index.cfg"
+std::map<std::string, std::string> gcfg::m_cfg = std::map<std::string, std::string>();
+std::map<std::string, std::string> gcfg::def_set = std::map<std::string, std::string>();
 
 bool gcfg::init() {
-	gcfg::m_cfg = fw::read(CFG_FILE_NAME);
+	gcfg::def_set = { {"fstruct_name", "f:"},
+				      {"rec_f",        "5"} };
+	std::ifstream f;
+	f.open(CFG_FILE_NAME);
+	if (f.is_open()) {
+		f.close();
+		gcfg::m_cfg = fw::read(CFG_FILE_NAME);
+	}
+	else {
+		gcfg::def();
+		return gcfg::init();
+	}
+	return true;
 }
 
 void gcfg::exit() {
@@ -13,12 +26,9 @@ void gcfg::exit() {
 }
 
 void gcfg::update() {
-	std::ofstream of;
-	of.open(CFG_FILE_NAME);
-	std::string lines;
-	for (std::pair<std::string, std::string> pr : gcfg::m_cfg) {
-		lines += pr.first + "@" + pr.second + ";\n";
-	}
+	fw::upt(CFG_FILE_NAME, gcfg::m_cfg);
+}
 
-	of.write(lines.c_str(), sizeof(lines));
+void gcfg::def() {
+	fw::upt(CFG_FILE_NAME, { {} });
 }
