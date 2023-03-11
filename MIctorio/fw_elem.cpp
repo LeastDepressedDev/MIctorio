@@ -45,3 +45,15 @@ std::map<std::string, std::string> fw::read(const char* path) {
 
 	return set;
 }
+
+void fw::upt(const char* path, std::map<std::string, std::string> set) {
+	std::ofstream of;
+	of.open(path);
+	std::string lines;
+	for (std::pair<std::string, std::string> pr : set) {
+		lines += pr.first + "@" + pr.second + ";\n";
+	}
+
+	of.write(lines.c_str(), sizeof(lines));
+	of.close();
+}

@@ -4,4 +4,5 @@
 
 namespace fw {
 	extern std::map<std::string, std::string> read(const char* path);
+	extern void upt(const char* path, std::map<std::string, std::string>);
 }
