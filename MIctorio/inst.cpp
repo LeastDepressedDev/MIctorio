@@ -3,6 +3,8 @@
 #include "fw_elem.h"
 #include "config.h"
 
+#include "hd.h"
+
 std::map<e_cmd_section, std::vector<command>> CMDS = {
 	{e_cmd_section::mwind, 
 		{
@@ -152,5 +154,12 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 				glob_app::stage = e_cmd_section::prj;
 			})
 		} 
+	},
+	{e_cmd_section::general,
+		{
+			command("clr", "Clear console window", [](std::vector<std::string> cmd) {
+				system(PROG_CLR);
+			})
+		}
 	}
 };

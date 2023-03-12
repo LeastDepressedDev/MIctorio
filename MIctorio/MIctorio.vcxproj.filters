@@ -74,5 +74,8 @@
     <ClInclude Include="index.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="hd.h">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

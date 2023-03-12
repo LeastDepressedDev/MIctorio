@@ -32,6 +32,7 @@
     <ClInclude Include="component.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="fw_elem.h" />
+    <ClInclude Include="hd.h" />
     <ClInclude Include="index.h" />
     <ClInclude Include="inst.h" />
     <ClInclude Include="Project.h" />
