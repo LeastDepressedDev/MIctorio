@@ -1,19 +1,29 @@
 #pragma once
 #include <vector>
+#include <iostream>
 #include "command.h"
+#include <map>
 
 extern enum e_component_type {
 	unkown, mod_info
 };
 
+extern std::map<e_component_type, std::vector<command>> eSet;
+
+extern std::map<std::string, e_component_type> nameLinker;
+
 class component_t {
 public:
 	e_component_type type = unkown;
-	component_t(const char* path);
+	component_t(std::string path, std::string name);
 	component_t() {};
-	const char* path;
+	std::string path;
+	std::string name;
 
-	std::vector<command> acts();
+	std::map<std::string, std::string> mParam = std::map<std::string, std::string>();
+
+	static std::vector<command> cmdRs();
 
 	static e_component_type ebt(std::string);
+	static std::string tte(e_component_type);
 };

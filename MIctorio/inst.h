@@ -2,11 +2,13 @@
 #define GEN_SEPARATOR '>'
 
 #include "command.h"
+#include "component.h"
+#include "str_proc.h"
 #include <vector>
 #include <map>
 
 extern enum e_cmd_section {
-	mwind, prj, elem_info
+	mwind, prj, elem
 };
 
 inline std::string gensec(e_cmd_section sec) {
@@ -18,8 +20,8 @@ inline std::string gensec(e_cmd_section sec) {
 	case e_cmd_section::prj:
 		return "Project window: ";
 		break;
-	case e_cmd_section::elem_info:
-		return "Element info: ";
+	case e_cmd_section::elem:
+		return "General element commands: ";
 		break;
 	default:
 		return "";
@@ -30,11 +32,30 @@ inline std::string gensec(e_cmd_section sec) {
 extern std::map<e_cmd_section, std::vector<command>> CMDS;
 
 inline void callCmd(e_cmd_section sec, std::vector<std::string> cmd) {
-	std::vector<command> cmd_vec = CMDS[sec];
+	std::vector<command> cmd_vec;
+	if (sec == e_cmd_section::elem) {
+		for (command c : CMDS[sec]) {
+			std::vector<std::string> als = vec_split(c.sId, '|');
+			for (std::string a : als) {
+				if (a == cmd[0]) {
+					c.f(cmd);
+					return;
+				}
+			}
+		}
+		cmd_vec = component_t::cmdRs();
+	}
+	else {
+		cmd_vec = CMDS[sec];
+		
+	}
 	for (command c : cmd_vec) {
-		if (c.sId == cmd[0]) {
-			c.f(cmd);
-			return;
+		std::vector<std::string> als = vec_split(c.sId, '|');
+		for (std::string a : als) {
+			if (a == cmd[0]) {
+				c.f(cmd);
+				return;
+			}
 		}
 	}
 	std::cout << "This command doesn't exists!" << std::endl;

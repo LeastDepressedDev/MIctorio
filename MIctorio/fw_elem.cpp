@@ -25,6 +25,7 @@ std::map<std::string, std::string> fw::read(const char* path) {
 			continue;
 		}
 		else if (line[i] == '@') {
+			i++;
 			for (i; i < line.length(); i++) {
 				if (line[i] == '\n') {
 					continue;
@@ -57,4 +58,8 @@ void fw::upt(const char* path, std::map<std::string, std::string> set) {
 
 	of << lines;
 	of.close();
+}
+
+std::string fw::correct_path(std::string str) {
+	return str[str.length() - 1] == '/' ? str : str + '/';
 }
