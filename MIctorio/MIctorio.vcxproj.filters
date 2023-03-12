@@ -22,11 +22,11 @@
     <Filter Include="Исходные файлы\elem">
       <UniqueIdentifier>{4b30582f-ccfa-4181-8ead-63887e9848d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\str">
+      <UniqueIdentifier>{7b85a3db-8f6a-4057-a1df-5230fb9fd91b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="index.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="config.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -42,6 +42,12 @@
     <ClCompile Include="inst.cpp">
       <Filter>Исходные файлы\comd</Filter>
     </ClCompile>
+    <ClCompile Include="str_proc.cpp">
+      <Filter>Исходные файлы\str</Filter>
+    </ClCompile>
+    <ClCompile Include="index.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="command.h">
@@ -56,14 +62,17 @@
     <ClInclude Include="Project.h">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="index.h">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="fw_elem.h">
       <Filter>Исходные файлы\fw</Filter>
     </ClInclude>
     <ClInclude Include="component.h">
       <Filter>Исходные файлы\elem</Filter>
+    </ClInclude>
+    <ClInclude Include="str_proc.h">
+      <Filter>Исходные файлы\str</Filter>
+    </ClInclude>
+    <ClInclude Include="index.h">
+      <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

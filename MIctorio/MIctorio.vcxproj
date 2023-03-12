@@ -25,6 +25,7 @@
     <ClCompile Include="index.cpp" />
     <ClCompile Include="inst.cpp" />
     <ClCompile Include="Project.cpp" />
+    <ClCompile Include="str_proc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="command.h" />
@@ -34,6 +35,7 @@
     <ClInclude Include="index.h" />
     <ClInclude Include="inst.h" />
     <ClInclude Include="Project.h" />
+    <ClInclude Include="str_proc.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
