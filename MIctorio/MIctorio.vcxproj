@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="compiler.cpp" />
     <ClCompile Include="component.cpp" />
     <ClCompile Include="config.cpp" />
     <ClCompile Include="fw_elem.cpp" />
@@ -29,6 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="command.h" />
+    <ClInclude Include="compiler.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="fw_elem.h" />
