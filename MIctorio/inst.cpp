@@ -3,6 +3,8 @@
 #include "fw_elem.h"
 #include "config.h"
 
+#include "Project.h"
+
 #include "hd.h"
 
 std::map<e_cmd_section, std::vector<command>> CMDS = {
@@ -117,6 +119,7 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 					for (std::pair<std::string, e_component_type> pr : nameLinker) {
 						if (cmd[1] == pr.first) {
 							glob_app::cur_prj->newCmp(component_t::ebt(cmd[1]));
+							glob_app::stage = e_cmd_section::elem;
 							return;
 						}
 					}
@@ -134,16 +137,27 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 			}),
 			command("goto", "Open project's element", [](std::vector<std::string> cmd) {
 				if (cmd.size() > 1) {
-					if (glob_app::cur_prj->openFG(cmd[1])) {
+					switch (glob_app::cur_prj->openFG(cmd[1]))
+					{
+					case 1:
 						glob_app::stage = elem;
-					}
-					else {
+						break;
+					case 2:
 						std::cout << "Invalid element name" << std::endl;
+						break;
+					case 3:
+						std::cout << "You can't open custom element" << std::endl;
+						break;
+					default:
+						break;
 					}
 				}
 				else {
 					std::cout << "Element name required." << std::endl;
 				}
+			}),
+			command("compile|cmp", "Compile project", [](std::vector<std::string> cmd) {
+				glob_app::cur_prj->compile();
 			})
 		}
 	},
@@ -152,6 +166,11 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 			command("exit|ext", "Project exit command", [](std::vector<std::string> cmd) {
 				glob_app::cur_prj->fg_c = nullptr;
 				glob_app::stage = e_cmd_section::prj;
+			}),
+			command("sts", "Prints element's keyset", [](std::vector<std::string> cmd) {
+				for (std::pair<std::string, std::string> pr : glob_app::cur_prj->fg_c->mParam) {
+					printf_s("%s - %s\n", pr.first, pr.second);
+				}
 			})
 		} 
 	},

@@ -1,11 +1,14 @@
 #pragma once
+
+#define COMPONENT_FILE_EXTENSION "cmp"
+
 #include <vector>
 #include <iostream>
 #include "command.h"
 #include <map>
 
 extern enum e_component_type {
-	unkown, mod_info
+	unkown, custom, mod_info
 };
 
 extern std::map<e_component_type, std::vector<command>> eSet;
@@ -26,4 +29,5 @@ public:
 
 	static e_component_type ebt(std::string);
 	static std::string tte(e_component_type);
+
 };

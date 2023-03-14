@@ -1,6 +1,8 @@
 #pragma once
 #define PRJ_FNAME "index.prj"
 #define SRC_DNAME "src"
+#define OUT_DNAME "out"
+#define SPRITES_DNAME "spts"
 
 #include <iostream>
 #include <fstream>
@@ -43,7 +45,7 @@ public:
 	void addCmp(component_t*);
 
 	void openFG(component_t*);
-	bool openFG(std::string);
+	uint8_t openFG(std::string);
 	bool isOpen();
 private:
 	bool opened = false;

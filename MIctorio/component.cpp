@@ -5,15 +5,16 @@
 std::map<e_component_type, std::vector<command>> eSet = {
 	{e_component_type::mod_info,
 		{
-			command("tt", "test modinfo command", [](std::vector<std::string> cmd) {
-				std::cout << "Heya!" << std::endl;
+			command("title", "title", [](std::vector<std::string> cmd) {
+				
 			})
 		}
 	}
 };
 
 std::map<std::string, e_component_type> nameLinker = {
-	{"info", e_component_type::mod_info}
+	{"info", e_component_type::mod_info},
+	{"cust", e_component_type::custom}
 };
 
 component_t::component_t(std::string path, std::string str) {

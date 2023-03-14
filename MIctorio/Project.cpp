@@ -3,6 +3,7 @@
 #include "fw_elem.h"
 #include "config.h"
 #include "str_proc.h"
+#include "compiler.h"
 #include <direct.h>
 #include <map>
 
@@ -32,6 +33,7 @@ bool Project::create(std::string pth) {
 	fw::upt((pth + std::string(PRJ_FNAME)).c_str(), set);
 
 	_mkdir((pth + SRC_DNAME).c_str());
+	_mkdir((pth + SRC_DNAME + "/" + SPRITES_DNAME).c_str());
 	return this->open(pth);
 }
 
@@ -69,7 +71,19 @@ void Project::upt() {
 				set[cl1] = cl2;
 			}
 		}
-		fw::upt((this->projectPath + cmp->path).c_str(), cmp->mParam);
+		if (cmp->type != e_component_type::custom) {
+			fw::upt((this->projectPath + cmp->path).c_str(), cmp->mParam);
+		}
+		else {
+			const char* pth = (this->projectPath + cmp->path).c_str();
+			std::ifstream f;
+			f.open(pth);
+			if (!f.is_open()) {
+				std::ofstream of;
+				of.open(pth);
+				of.close();
+			}
+		}
 	}
 	fw::upt(this->info_file_path.c_str(), set);
 }
@@ -102,14 +116,19 @@ void Project::openFG(component_t* cmp) {
 	this->fg_c = cmp;
 }
 
-bool Project::openFG(std::string str) {
+uint8_t Project::openFG(std::string str) {
 	for (component_t* c : this->comp) {
 		if (str == c->name) {
-			this->openFG(c);
-			return true;
+			if (c->type == e_component_type::custom) {
+				return 2;
+			}
+			else {
+				this->openFG(c); 
+				return 1;
+			}
 		}
 	}
-	return false;
+	return 2;
 }
 
 void Project::newCmp(e_component_type ec) {
@@ -117,11 +136,29 @@ void Project::newCmp(e_component_type ec) {
 	std::cout << "Name: ";
 	name = str_in();
 	std::cout << "Path(relative): ";
-	path = (std::string(SRC_DNAME) + "/" + str_in());
+	path = (std::string(SRC_DNAME) + "/" + str_in() + '.' + COMPONENT_FILE_EXTENSION);
 	
 	component_t* cmp = new component_t(path, name);
 	cmp->type = ec;
 
 	this->addCmp(cmp);
 	this->upt();
+
+	if (ec != e_component_type::custom) {
+		this->openFG(cmp);
+	}
+	else {
+		std::ifstream f;
+		f.open(cmp->path);
+		if (!f.is_open()) {
+			std::ofstream of;
+			of.open(cmp->path);
+			of.close();
+		}
+	}
+}
+
+void Project::compile() {
+	compiler cmp(this->projectPath, this->comp);
+	cmp.compile();
 }
