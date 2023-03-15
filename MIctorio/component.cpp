@@ -5,8 +5,18 @@
 std::map<e_component_type, std::vector<command>> eSet = {
 	{e_component_type::mod_info,
 		{
-			command("title", "title", [](std::vector<std::string> cmd) {
-				
+			command("title", "sets title of your mod", [](std::vector<std::string> cmd) {
+				if (cmd.size() > 1) {
+					std::string line;
+					for (int i = 1; i < cmd.size(); i++) {
+						line += cmd[i] + " ";
+					}
+					glob_app::cur_prj->fg_c->mParam["title"] = line;
+					glob_app::cur_prj->upt();
+				}
+				else {
+					std::cout << "<Title> required." << std::endl;
+				}
 			})
 		}
 	}
@@ -18,6 +28,7 @@ std::map<std::string, e_component_type> nameLinker = {
 };
 
 component_t::component_t(std::string path, std::string str) {
+	this->mParam = std::map<std::string, std::string>();
 	this->path = path;
 	this->name = str;
 }
