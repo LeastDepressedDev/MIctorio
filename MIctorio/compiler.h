@@ -1,4 +1,7 @@
 #pragma once
+
+#define INFO_FNAME "info.json"
+
 #include <iostream>
 #include "component.h"
 #include <vector>
@@ -17,8 +20,12 @@ public:
 	void compile();
 
 private:
-	void compInfo(component_t*);
+	component_t* getInfo();
 
+	void compInfo(component_t*);
+	void compCust(component_t*);
+	
+	std::string dpath;
 	std::string inpath;
 	std::string outpath;
 	std::string spath;
