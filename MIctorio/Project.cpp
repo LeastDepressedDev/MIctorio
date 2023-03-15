@@ -178,6 +178,7 @@ void Project::newCmp(e_component_type ec) {
 	}
 	else {
 		std::ifstream f;
+		fw::buildPth(cmp->path);
 		f.open(cmp->path);
 		if (!f.is_open()) {
 			std::ofstream of;

@@ -5,6 +5,10 @@
 #include "fw_elem.h"
 #include <fstream>
 
+std::map<e_component_type, std::string> compiler::links = {
+	{}
+};
+
 compiler::compiler(std::string prj_path, std::vector<component_t*> elems) {
 	this->dpath = prj_path;
 	this->inpath = prj_path + SRC_DNAME;
@@ -21,13 +25,43 @@ component_t* compiler::getInfo() {
 	return nullptr;
 }
 
+void compiler::dataLua(std::vector<std::string> regs) {
+	std::ofstream of;
+	of.open(this->outpath + "/data.lua");
+	for (std::string reg : regs) {
+		of << "require(\"__" + this->mod_name + "__/" + reg + "\")\n";
+	}
+	of.close();
+}
+
+void compiler::push(e_component_type type, std::vector<std::string> data) {
+	std::string line = "data:extend({\n";
+	for (std::string comp : data) {
+		line += comp + '\n';
+	}
+	std::ofstream of;
+	std::string add = compiler::links[type];
+	of.open(this->outProc + "/" + add);
+	of << line;
+	of.close();
+	tec.push_back(add);
+}
+
+void compiler::pushAll() {
+	for (std::pair<e_component_type, std::vector<std::string>> pr : this->pred) {
+		this->push(pr.first, pr.second);
+	}
+}
+
 void compiler::compile() {
 	component_t* comp = this->getInfo();
+	tec = std::vector<std::string>(0);
 	if (comp == nullptr) {
 		printf("Info file not found. Compiling canceled!\n");
 		return;
 	}
-	std::string nm = comp->mParam["name"];
+	this->mod_name = comp->mParam["name"];
+	std::string nm = this->mod_name;
 	int c = comp->mParam["version"].rfind('.');
 	for (int i = 0; i < 2 - c; i++) {
 		comp->mParam["version"] += ".0";
@@ -44,6 +78,7 @@ void compiler::compile() {
 	_mkdir(outProc.c_str());
 
 	printf("Compiling %d elements: \n", this->comps.size());
+	int cob = 0;
 	for (component_t* cmp : this->comps) {
 		printf("Compiling %s: ", cmp->name.c_str());
 		if ([this, cmp]() {
@@ -60,11 +95,18 @@ void compiler::compile() {
 			}
 			}()) {
 			printf("success.\n");
+			cob++;
 		}
 		else {
 			printf("error.\n");
 		}
 	}
+
+	printf("Creating %d files... \n", this->pred.size());
+	this->pushAll();
+	printf("Building data.lua for %d objects: \n", cob);
+	this->dataLua(tec);
+	//dataLua();
 }
 
 bool cont(std::map<std::string, std::string> mp, std::string key) {
@@ -96,9 +138,11 @@ void compiler::compInfo(component_t* comp) {
 
 void compiler::compCust(component_t* comp) {
 	std::ofstream of;
-	of.open(this->outpath + "/" + comp->path);
+	std::string s = this->outProc + "/" + comp->path.substr(0, comp->path.size() - 4) + ".lua";
+	fw::buildPth(s);
+	of.open(s);
 	std::ifstream f;
-	f.open(this->inpath + "/" + comp->path);
+	f.open(this->inpath + "/" + SRC_DNAME + "/" + comp->path);
 	char buf;
 	std::string line;
 	while (f.read(&buf, sizeof(buf)))
@@ -107,4 +151,5 @@ void compiler::compCust(component_t* comp) {
 	}
 	of << line;
 	of.close();
+	tec.push_back(s);
 }

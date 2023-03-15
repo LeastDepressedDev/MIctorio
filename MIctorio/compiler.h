@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "component.h"
+#include <map>
 #include <vector>
 
 //namespace cmp_asset {
@@ -14,6 +15,8 @@
 
 class compiler {
 public:
+	static std::map<e_component_type, std::string> links;
+
 	std::vector<component_t*> comps;
 	compiler(std::string prj_path, std::vector<component_t*> elems);
 
@@ -22,8 +25,17 @@ public:
 private:
 	component_t* getInfo();
 
+	std::map<e_component_type, std::vector<std::string>> pred;
+	std::vector<std::string> tec;
+
+	void dataLua(std::vector<std::string>);
+
+	void pushAll();
+	void push(e_component_type, std::vector<std::string>);
 	void compInfo(component_t*);
 	void compCust(component_t*);
+
+	std::string mod_name;
 	
 	std::string dpath;
 	std::string inpath;
