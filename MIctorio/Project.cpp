@@ -5,7 +5,6 @@
 #include "str_proc.h"
 #include "compiler.h"
 #include <direct.h>
-#include <map>
 
 Project::Project() {
 	this->comp = std::vector<component_t*>(0);
@@ -72,7 +71,7 @@ void Project::upt() {
 			}
 		}
 		if (cmp->type != e_component_type::custom) {
-			fw::upt((this->projectPath + cmp->path).c_str(), cmp->mParam);
+			fw::upt((this->projectPath + SRC_DNAME + "/" + cmp->path).c_str(), cmp->mParam);
 		}
 		else {
 			const char* pth = (this->projectPath + cmp->path).c_str();
@@ -86,6 +85,35 @@ void Project::upt() {
 		}
 	}
 	fw::upt(this->info_file_path.c_str(), set);
+}
+
+void Project::removeComp(size_t i) {
+	std::remove((this->projectPath + this->comp[i]->path).c_str());
+	std::map<std::string, std::string> set = fw::read(this->info_file_path.c_str());
+	set.erase(this->fstr + this->comp[i]->name);
+	fw::upt(this->info_file_path.c_str(), set);
+	this->comp.erase(comp.begin() + i);
+	this->upt();
+}
+
+bool Project::rmCmp(std::string name) {
+	for (size_t i = 0; i < this->comp.size(); i++) {
+		if (this->comp[i]->name == name) {
+			this->removeComp(i);
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Project::rmCmpByPath(std::string pth) {
+	for (size_t i = 0; i < this->comp.size(); i++) {
+		if (this->comp[i]->path == pth) {
+			this->removeComp(i);
+			return true;
+		}
+	}
+	return false;
 }
 
 void Project::addCmp(std::pair<std::string, std::string> pr) {
@@ -104,7 +132,7 @@ void Project::addCmp(std::pair<std::string, std::string> pr) {
 	}
 	component_t* comp = new component_t(file, nm);
 	comp->type = component_t::ebt(type);
-	comp->mParam = fw::read((this->projectPath + comp->path).c_str());
+	comp->mParam = fw::read((this->projectPath + SRC_DNAME + "/" + comp->path).c_str());
 	this->addCmp(comp);
 }
 
@@ -136,10 +164,11 @@ void Project::newCmp(e_component_type ec) {
 	std::cout << "Name: ";
 	name = str_in();
 	std::cout << "Path(relative): ";
-	path = (std::string(SRC_DNAME) + "/" + str_in() + '.' + COMPONENT_FILE_EXTENSION);
+	path = (str_in() + '.' + COMPONENT_FILE_EXTENSION);
 	
 	component_t* cmp = new component_t(path, name);
 	cmp->type = ec;
+	cmp->mParam = genDef(cmp->type);
 
 	this->addCmp(cmp);
 	this->upt();
@@ -156,6 +185,18 @@ void Project::newCmp(e_component_type ec) {
 			of.close();
 		}
 	}
+}
+
+std::map<std::string, std::string> Project::genDef(e_component_type type) {
+	std::map<std::string, std::string> smp;
+	if (type == e_component_type::mod_info) {
+		smp["name"] = this->name;
+		smp["version"] = this->ver;
+		smp["title"] = this->name;
+		smp["author"] = this->author;
+		smp["factorio_version"] = "1.1";
+	}
+	return smp;
 }
 
 void Project::compile() {

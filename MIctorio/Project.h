@@ -5,6 +5,7 @@
 #define SPRITES_DNAME "spts"
 
 #include <iostream>
+#include <map>
 #include <fstream>
 #include "component.h"
 #include <vector>
@@ -41,6 +42,8 @@ public:
 	std::vector<component_t*> comp;
 
 	void newCmp(e_component_type);
+	bool rmCmp(std::string);
+	bool rmCmpByPath(std::string);
 	void addCmp(std::pair<std::string, std::string>);
 	void addCmp(component_t*);
 
@@ -48,8 +51,11 @@ public:
 	uint8_t openFG(std::string);
 	bool isOpen();
 private:
+	void removeComp(size_t);
 	bool opened = false;
 	std::string projectPath;
 	std::string info_file_path;
 	std::string fstr;
+
+	std::map<std::string, std::string> genDef(e_component_type);
 };

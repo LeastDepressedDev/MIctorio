@@ -118,8 +118,10 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 				if (cmd.size() > 1) {
 					for (std::pair<std::string, e_component_type> pr : nameLinker) {
 						if (cmd[1] == pr.first) {
-							glob_app::cur_prj->newCmp(component_t::ebt(cmd[1]));
-							glob_app::stage = e_cmd_section::elem;
+							glob_app::cur_prj->newCmp(pr.second);
+							if (pr.second != e_component_type::custom) {
+								glob_app::stage = e_cmd_section::elem;
+							}
 							return;
 						}
 					}
@@ -156,6 +158,16 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 					std::cout << "Element name required." << std::endl;
 				}
 			}),
+			command("rm|del", "Deletes element", [](std::vector<std::string> cmd) {
+				if (cmd.size() > 1) {
+					if (!glob_app::cur_prj->rmCmp(cmd[1])) {
+						std::cout << "Unable to delete this element or it's just doesn't exist." << std::endl;
+					}
+				}
+				else {
+					std::cout << "Element name required." << std::endl;
+				}
+			}),
 			command("compile|cmp", "Compile project", [](std::vector<std::string> cmd) {
 				glob_app::cur_prj->compile();
 			})
@@ -169,7 +181,25 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 			}),
 			command("sts", "Prints element's keyset", [](std::vector<std::string> cmd) {
 				for (std::pair<std::string, std::string> pr : glob_app::cur_prj->fg_c->mParam) {
-					printf_s("%s - %s\n", pr.first, pr.second);
+					printf_s("%s - %s\n", pr.first.c_str(), pr.second.c_str());
+				}
+			}),
+			command("set", "Manually set key:value", [](std::vector<std::string> cmd) {
+				if (cmd.size() > 2) {
+					glob_app::cur_prj->fg_c->mParam[cmd[1]] = cmd[2];
+				}
+				else {
+					std::cout << "Wrong format. use (set <key> <value>)" << std::endl;
+				}
+			}), 
+			command("help", "Helping you with this shit", [](std::vector<std::string> cmd) {
+				printf("Commands: \n");
+				for (command c : CMDS[e_cmd_section::elem]) {
+					std::cout << ":  prj" << GEN_SEPARATOR << "elem" << GEN_SEPARATOR << c.sId << " - " << c.sDesc << std::endl;
+				}
+				for (command c : eSet[glob_app::cur_prj->fg_c->type]) {
+					std::cout << ":  prj" << GEN_SEPARATOR << component_t::tte(glob_app::cur_prj->fg_c->type) 
+						<< GEN_SEPARATOR << c.sId << " - " << c.sDesc << std::endl;
 				}
 			})
 		} 
