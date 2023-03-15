@@ -1,4 +1,5 @@
 #include "fw_elem.h"
+#include <vector>
 #include <fstream>
 
 std::map<std::string, std::string> fw::read(const char* path) {
@@ -62,4 +63,17 @@ void fw::upt(const char* path, std::map<std::string, std::string> set) {
 
 std::string fw::correct_path(std::string str) {
 	return str[str.length() - 1] == '/' ? str : str + '/';
+}
+
+template <typename... T> 
+std::string fw::build_path(T... args) {
+	if (T == std::string) {
+		std::string line;
+		std::vector<std::string> vec = { args };
+		for (std::string str : vec) {
+			line += str + "/";
+		}
+		return line;
+	}
+	return NULL;
 }
