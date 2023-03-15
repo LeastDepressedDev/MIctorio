@@ -1,5 +1,6 @@
 #include "fw_elem.h"
 #include <vector>
+#include <direct.h>
 #include <fstream>
 
 std::map<std::string, std::string> fw::read(const char* path) {
@@ -76,4 +77,14 @@ std::string fw::build_path(T... args) {
 		return line;
 	}
 	return NULL;
+}
+
+void fw::buildPth(std::string str) {
+	std::string dirn;
+	for (int i = 0; i < str.length(); i++) {
+		if (str[i] == '/') {
+			_mkdir(dirn.c_str());
+		}
+		dirn += str[i];
+	}
 }
