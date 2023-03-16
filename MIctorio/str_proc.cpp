@@ -16,6 +16,11 @@ std::vector<std::string> vec_split(std::string str, char sep) {
 	return vec;
 }
 
+std::string str_in(std::string inMsg) {
+	std::cout << inMsg;
+	return str_in();
+}
+
 std::string str_in() {
 	std::string buf = "";
 	char a = '0';
