@@ -170,21 +170,25 @@ void Project::newCmp(e_component_type ec) {
 	cmp->type = ec;
 	cmp->mParam = genDef(cmp->type);
 
+	std::string pth = this->projectPath + SRC_DNAME + "/" + cmp->path;
+
+	fw::buildPth(pth);
+	std::ifstream f;
+	f.open(pth);
+	if (!f.is_open()) {
+		std::ofstream of;
+		of.open(pth);
+		of.close();
+	}
+	else {
+		f.close();
+	}
+
 	this->addCmp(cmp);
 	this->upt();
 
 	if (ec != e_component_type::custom) {
 		this->openFG(cmp);
-	}
-	else {
-		std::ifstream f;
-		fw::buildPth(cmp->path);
-		f.open(cmp->path);
-		if (!f.is_open()) {
-			std::ofstream of;
-			of.open(cmp->path);
-			of.close();
-		}
 	}
 }
 
