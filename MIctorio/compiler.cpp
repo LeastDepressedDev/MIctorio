@@ -3,7 +3,9 @@
 #include "hd.h"
 
 #include <direct.h>
+#include <regex>
 #include "Project.h"
+#include <string>
 #include "fw_elem.h"
 #include <fstream>
 
@@ -168,25 +170,8 @@ bool cont(std::map<std::string, std::string> mp, std::string key) {
 }
 
 bool checkNumb(std::string str) {
-	for (int i = 0; i < str.length(); i++) {
-		switch (str[i])
-		{
-		case '0':
-		case '1':
-		case '2':
-		case '3':
-		case '4':
-		case '5':
-		case '6':
-		case '7':
-		case '8':
-		case '9':
-			break;
-		default:
-			return false;
-		}
-	}
-	return true;
+	//return std::regex_match(str, std::regex("(\\d)\\w+")) || std::regex_match(str, std::regex("(\\d)"));
+	return std::regex_match(str, std::regex("^[0-9]*$"));
 }
 
 void compiler::compInfo(component_t* comp) {
@@ -213,7 +198,7 @@ void compiler::compCust(component_t* comp) {
 	fw::buildPth(this->outpath + "/" + s);
 	of.open(this->outpath + "/" + s);
 	std::ifstream f;
-	f.open(this->inpath + "/" + SRC_DNAME + "/" + comp->path);
+	f.open(this->inpath + "/" + comp->path);
 	char buf;
 	std::string line;
 	while (f.read(&buf, sizeof(buf)))
