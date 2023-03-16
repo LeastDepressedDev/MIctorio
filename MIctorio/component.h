@@ -8,7 +8,7 @@
 #include <map>
 
 extern enum e_component_type {
-	unkown, custom, mod_info
+	unkown, custom, mod_info, c_item
 };
 
 extern std::map<e_component_type, std::vector<command>> eSet;

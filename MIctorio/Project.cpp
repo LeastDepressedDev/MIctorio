@@ -197,6 +197,15 @@ std::map<std::string, std::string> Project::genDef(e_component_type type) {
 		smp["author"] = this->author;
 		smp["factorio_version"] = "1.1";
 	}
+	else if (type == e_component_type::c_item) {
+		smp["name"] = str_in("Item ID: ");
+		smp["icon"] = this->projectPath + SRC_DNAME + "/" + SPRITES_DNAME + "/" + str_in("Icon path(start's from src/spts directory): ");
+		smp["title"] = smp["name"];
+		smp["type"] = "item";
+		smp["icon_size"] = "32";
+		smp["icon_mipmaps"] = "4";
+		smp["stack_size"] = "100";
+	}
 	return smp;
 }
 

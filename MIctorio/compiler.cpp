@@ -1,12 +1,18 @@
 #include "compiler.h"
 
+#include "hd.h"
+
 #include <direct.h>
 #include "Project.h"
 #include "fw_elem.h"
 #include <fstream>
 
 std::map<e_component_type, std::string> compiler::links = {
-	{}
+	{e_component_type::c_item, "items.lua"}
+};
+
+std::map<e_component_type, std::string> compiler::secNm = {
+	{e_component_type::c_item, "item-name"}
 };
 
 compiler::compiler(std::string prj_path, std::vector<component_t*> elems) {
@@ -35,16 +41,18 @@ void compiler::dataLua(std::vector<std::string> regs) {
 }
 
 void compiler::push(e_component_type type, std::vector<std::string> data) {
-	std::string line = "data:extend({\n";
+	std::string line = "data:extend({";
 	for (std::string comp : data) {
-		line += comp + '\n';
+		line += "\n" + comp + ",";
 	}
+	line.pop_back();
+	line += "})";
 	std::ofstream of;
 	std::string add = compiler::links[type];
 	of.open(this->outProc + "/" + add);
 	of << line;
 	of.close();
-	tec.push_back(add);
+	tec.push_back("prototypes/" + add);
 }
 
 void compiler::pushAll() {
@@ -53,7 +61,37 @@ void compiler::pushAll() {
 	}
 }
 
+void compiler::addLocale() {
+	std::map<e_component_type, std::string> locn;
+	printf("Finding item names... ");
+	int i = 0;
+	for (component_t* cmp : this->comps) {
+		if (!(cmp->type == e_component_type::mod_info || cmp->type == e_component_type::custom)) {
+			locn[cmp->type] += cmp->mParam["name"] + "=" + cmp->mParam["title"] + "\n";
+			i++;
+		}
+	}
+	printf("Done.\n%d names found.\n Inserting... ", i);
+	std::ofstream of;
+	std::string pth = this->outLoc + "/" + "en" + "/" + this->mod_name + ".cfg";
+	fw::buildPth(pth);
+	of.open(pth);
+	for (std::pair<e_component_type, std::string> pr : locn) {
+		of << "[" + secNm[pr.first] + "]\n" + pr.second + "\n\n";
+	}
+	of.close();
+	printf("Done.\n");
+}
+
+void compiler::prepMap() {
+	this->pred[e_component_type::c_item] = std::vector<std::string>(0);
+}
+
 void compiler::compile() {
+	system(PROG_CLR);
+
+	printf("Compiling...\n");
+	printf("Preparing output folder...\n");
 	component_t* comp = this->getInfo();
 	tec = std::vector<std::string>(0);
 	if (comp == nullptr) {
@@ -69,6 +107,7 @@ void compiler::compile() {
 	nm += "_" + comp->mParam["version"];
 	this->outpath = this->dpath + nm;
 
+	_rmdir(this->outpath.c_str());
 	_mkdir(this->outpath.c_str());
 	this->outGrapgh = (this->outpath + "/grs");
 	this->outLoc = (this->outpath + "/locale");
@@ -76,6 +115,11 @@ void compiler::compile() {
 	_mkdir(outGrapgh.c_str());
 	_mkdir(outLoc.c_str());
 	_mkdir(outProc.c_str());
+	printf("Done.\n");
+
+	printf("Preparing sets...\n");
+	prepMap();
+	printf("Done.\n");
 
 	printf("Compiling %d elements: \n", this->comps.size());
 	int cob = 0;
@@ -89,6 +133,9 @@ void compiler::compile() {
 				return true;
 			case e_component_type::custom:
 				this->compCust(cmp);
+				return true;
+			case e_component_type::c_item:
+				this->compItem(cmp);
 				return true;
 			default:
 				return false;
@@ -104,9 +151,11 @@ void compiler::compile() {
 
 	printf("Creating %d files... \n", this->pred.size());
 	this->pushAll();
-	printf("Building data.lua for %d objects: \n", cob);
+	printf("Building data.lua for %d objects... \n", this->pred.size());
 	this->dataLua(tec);
-	//dataLua();
+	printf("Localising %d objects... \n", cob);
+	this->addLocale();
+	printf("Localising done.\n");
 }
 
 bool cont(std::map<std::string, std::string> mp, std::string key) {
@@ -116,6 +165,28 @@ bool cont(std::map<std::string, std::string> mp, std::string key) {
 		}
 	}
 	return false;
+}
+
+bool checkNumb(std::string str) {
+	for (int i = 0; i < str.length(); i++) {
+		switch (str[i])
+		{
+		case '0':
+		case '1':
+		case '2':
+		case '3':
+		case '4':
+		case '5':
+		case '6':
+		case '7':
+		case '8':
+		case '9':
+			break;
+		default:
+			return false;
+		}
+	}
+	return true;
 }
 
 void compiler::compInfo(component_t* comp) {
@@ -138,9 +209,9 @@ void compiler::compInfo(component_t* comp) {
 
 void compiler::compCust(component_t* comp) {
 	std::ofstream of;
-	std::string s = this->outProc + "/" + comp->path.substr(0, comp->path.size() - 4) + ".lua";
-	fw::buildPth(s);
-	of.open(s);
+	std::string s = comp->path.substr(0, comp->path.size() - 4) + ".lua";
+	fw::buildPth(this->outpath + "/" + s);
+	of.open(this->outpath + "/" + s);
 	std::ifstream f;
 	f.open(this->inpath + "/" + SRC_DNAME + "/" + comp->path);
 	char buf;
@@ -152,4 +223,21 @@ void compiler::compCust(component_t* comp) {
 	of << line;
 	of.close();
 	tec.push_back(s);
+}
+
+void compiler::compItem(component_t* comp) {
+	std::string lines = "{";
+	for (std::pair<std::string, std::string> pr : comp->mParam) {
+		lines += "\n	" + pr.first;
+		lines += ((checkNumb(pr.second)) ? (" = " + pr.second + ",") : (" = \"" + pr.second + "\","));
+		/*if (checkNumb(pr.second)) {
+			lines += "= " + pr.second + ",";
+		}
+		else {
+			"= \"" + pr.second + "\",";
+		}*/
+	}
+	lines.pop_back();
+	lines += "\n}\n";
+	this->pred[e_component_type::c_item].push_back(lines);
 }

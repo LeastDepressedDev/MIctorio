@@ -16,6 +16,7 @@
 class compiler {
 public:
 	static std::map<e_component_type, std::string> links;
+	static std::map<e_component_type, std::string> secNm;
 
 	std::vector<component_t*> comps;
 	compiler(std::string prj_path, std::vector<component_t*> elems);
@@ -28,12 +29,17 @@ private:
 	std::map<e_component_type, std::vector<std::string>> pred;
 	std::vector<std::string> tec;
 
+	void prepMap();
+
 	void dataLua(std::vector<std::string>);
+	void addLocale();
 
 	void pushAll();
 	void push(e_component_type, std::vector<std::string>);
+
 	void compInfo(component_t*);
 	void compCust(component_t*);
+	void compItem(component_t*);
 
 	std::string mod_name;
 	
