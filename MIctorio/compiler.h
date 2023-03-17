@@ -41,6 +41,8 @@ private:
 	void compCust(component_t*);
 	void compItem(component_t*);
 
+	void assetDeal(std::string);
+
 	std::string mod_name;
 	
 	std::string dpath;

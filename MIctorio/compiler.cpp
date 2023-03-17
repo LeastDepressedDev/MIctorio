@@ -4,10 +4,12 @@
 
 #include <direct.h>
 #include <regex>
+#include <fstream>
 #include "Project.h"
 #include <string>
 #include "fw_elem.h"
-#include <fstream>
+
+#include <filesystem>
 
 std::map<e_component_type, std::string> compiler::links = {
 	{e_component_type::c_item, "items.lua"}
@@ -60,6 +62,31 @@ void compiler::push(e_component_type type, std::vector<std::string> data) {
 void compiler::pushAll() {
 	for (std::pair<e_component_type, std::vector<std::string>> pr : this->pred) {
 		this->push(pr.first, pr.second);
+	}
+}
+
+void compiler::assetDeal(std::string pthAdr) {
+	for (const auto& fl : std::filesystem::directory_iterator(this->inpath + "/" + SPRITES_DNAME + ((pthAdr.length() > 0) ? "/" : "") + pthAdr)) {
+		std::string fname = fl.path().filename().string();
+		if (fl.is_directory()) {
+			assetDeal(pthAdr + "/" + fname);
+		}
+		else {
+			std::cout << fname << "..";
+			std::ofstream of;
+			std::ifstream f;
+			f.open(this->inpath + "/" + SPRITES_DNAME + ((pthAdr.length() > 0) ? "/" : "") + pthAdr + "/" + fname, std::ios::binary);
+			std::string outPth = this->outGrapgh + ((pthAdr.length() > 0) ? "/" : "") + pthAdr + "/" + fname;
+			fw::buildPth(outPth);
+			of.open(outPth, std::ios::binary);
+			char c;
+			while (f.read(&c, sizeof(c))) {
+				of << c;
+			}
+			f.close();
+			of.close();
+			std::cout << "transfered." << std::endl;
+		}
 	}
 }
 
@@ -158,6 +185,9 @@ void compiler::compile() {
 	printf("Localising %d objects... \n", cob);
 	this->addLocale();
 	printf("Localising done.\n");
+	printf("Transfering assets... \n");
+	this->assetDeal("");
+	printf("Done.\n");
 }
 
 bool cont(std::map<std::string, std::string> mp, std::string key) {
@@ -210,8 +240,16 @@ void compiler::compCust(component_t* comp) {
 	tec.push_back(s);
 }
 
+std::string subl(std::string str) {
+	size_t sz = std::string(SPRITES_DNAME).length();
+	int x = str.find(SPRITES_DNAME, sz);
+
+	return str.substr(x + sz);
+}
+
 void compiler::compItem(component_t* comp) {
 	std::string lines = "{";
+	comp->mParam["icon"] = "__" + this->mod_name + "__" + subl(comp->mParam["icon"]);
 	for (std::pair<std::string, std::string> pr : comp->mParam) {
 		lines += "\n	" + pr.first;
 		lines += ((checkNumb(pr.second)) ? (" = " + pr.second + ",") : (" = \"" + pr.second + "\","));
