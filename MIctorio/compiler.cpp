@@ -249,7 +249,7 @@ std::string subl(std::string str) {
 
 void compiler::compItem(component_t* comp) {
 	std::string lines = "{";
-	comp->mParam["icon"] = "__" + this->mod_name + "__" + subl(comp->mParam["icon"]);
+	comp->mParam["icon"] = "__" + this->mod_name + "__/grs" + subl(comp->mParam["icon"]);
 	for (std::pair<std::string, std::string> pr : comp->mParam) {
 		lines += "\n	" + pr.first;
 		lines += ((checkNumb(pr.second)) ? (" = " + pr.second + ",") : (" = \"" + pr.second + "\","));
