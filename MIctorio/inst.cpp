@@ -187,6 +187,7 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 			command("set", "Manually set key:value", [](std::vector<std::string> cmd) {
 				if (cmd.size() > 2) {
 					glob_app::cur_prj->fg_c->mParam[cmd[1]] = cmd[2];
+					glob_app::cur_prj->upt();
 				}
 				else {
 					std::cout << "Wrong format. use (set <key> <value>)" << std::endl;
@@ -200,6 +201,15 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 				for (command c : eSet[glob_app::cur_prj->fg_c->type]) {
 					std::cout << ":  prj" << GEN_SEPARATOR << component_t::tte(glob_app::cur_prj->fg_c->type) 
 						<< GEN_SEPARATOR << c.sId << " - " << c.sDesc << std::endl;
+				}
+			}),
+			command("order", "Order filter. Yep...",[](std::vector<std::string> cmd) {
+				if (cmd.size() > 1) {
+					glob_app::cur_prj->fg_c->mParam["order"] = cmd[1];
+					glob_app::cur_prj->upt();
+				}
+				else {
+					std::cout << "Order<Integer> required." << std::endl;
 				}
 			})
 		} 
