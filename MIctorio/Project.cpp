@@ -3,6 +3,7 @@
 #include "fw_elem.h"
 #include "config.h"
 #include "str_proc.h"
+#include "DataRaw.h"
 #include "compiler.h"
 #include <direct.h>
 
@@ -209,6 +210,33 @@ std::map<std::string, std::string> Project::genDef(e_component_type type) {
 		smp["icon_size"] = "32";
 		smp["icon_mipmaps"] = "4";
 		smp["stack_size"] = "100";
+	}
+	else if (type == e_component_type::c_recipe) {
+		smp["name"] = str_in("Recipe ID: ");
+		smp["type"] = "recipe";
+		smp["title"] = smp["name"];
+		std::string rq_msg = "Category[";
+		for (std::string nm : factorio::recipe_category) {
+			rq_msg += nm + ',';
+		}
+		rq_msg.pop_back();
+		rq_msg += "]: ";
+		std::string tmp_cat = str_in(rq_msg);
+		while ([tmp_cat](){
+			for (std::string key : factorio::recipe_category) {
+				if (tmp_cat == key) {
+					return false;
+				}
+			}
+			return true;
+			}()) {
+			printf("Please enter valid category!\n");
+			tmp_cat = str_in(rq_msg);
+		}
+		smp["category"] = tmp_cat;
+		smp["icount"] = "0";
+		smp["rcount"] = "0";
+		smp["enabled"] = "true";
 	}
 	return smp;
 }

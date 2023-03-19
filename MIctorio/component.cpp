@@ -1,6 +1,8 @@
 #include "component.h"
 
 #include "index.h"
+#include "DataRaw.h"
+#include "recipe.h"
 #include <string>
 
 std::map<e_component_type, std::vector<command>> eSet = {
@@ -66,13 +68,164 @@ std::map<e_component_type, std::vector<command>> eSet = {
 				}
 			})
 		}
+	},
+	{e_component_type::c_recipe,
+		{
+			command("see", "Shows current recipe state", [](std::vector<std::string> cmd) {
+				std::vector<semi_rc> ingr(std::stoi(glob_app::cur_prj->fg_c->mParam["icount"])), 
+					resu(std::stoi(glob_app::cur_prj->fg_c->mParam["rcount"]));
+				for (std::pair<std::string, std::string> pr : glob_app::cur_prj->fg_c->mParam) {
+					if (pr.first._Starts_with(ING_INDET)) {
+						int icd = std::stoi(pr.first.substr(std::string(ING_INDET).length()));
+						ingr[icd] = parseRecStr(pr.second);
+					}
+					else if (pr.first._Starts_with(RES_INDET)) {
+						int icd = std::stoi(pr.first.substr(std::string(RES_INDET).length()));
+						resu[icd] = parseRecStr(pr.second);
+					}
+				}
+
+				std::cout << "From:" << std::endl;
+				for (semi_rc rc : ingr) {
+					std::cout << rc.type << " - " << rc.id << " - " << rc.count << ";" << std::endl;
+				}
+				std::cout << "To:" << std::endl;
+				for (semi_rc rc : resu) {
+					std::cout << rc.type << " - " << rc.id << " - " << rc.count << ";" << std::endl;
+				}
+			}),
+			command("add", "Adding component /add <mode> <type> <id> <count>", [](std::vector<std::string> cmd) {
+				if (cmd.size() > 4) {
+					if (cmd[1] == "i") {
+						if ([cmd]() {
+							for (std::string tp : factorio::ingr_type) {
+								if (tp == cmd[2]) {
+									return false;
+								}
+							}
+							return true;
+							}()) {
+							std::cout << "Incorrect recipe type. Allowed type: " << std::endl;
+							for (std::string tp : factorio::ingr_type) {
+								std::cout << tp << std::endl;
+							}
+							return;
+						}
+						std::string addr = cmd[3] + ":" + cmd[2] + ":" + cmd[4];
+						int nid = std::stoi(glob_app::cur_prj->fg_c->mParam["icount"]);
+						glob_app::cur_prj->fg_c->mParam[std::string(ING_INDET) + std::to_string(nid)] = addr;
+						glob_app::cur_prj->fg_c->mParam["icount"] = std::to_string(nid + 1);
+						glob_app::cur_prj->upt();
+					}
+					else if (cmd[1] == "r") {
+						if ([cmd]() {
+							for (std::string tp : factorio::ingr_type) {
+								if (tp == cmd[2]) {
+									return false;
+								}
+							}
+							return true;
+							}()) {
+							std::cout << "Incorrect recipe type. Allowed type: " << std::endl;
+							for (std::string tp : factorio::ingr_type) {
+								std::cout << tp << std::endl;
+							}
+							return;
+						}
+						std::string addr = cmd[3] + ":" + cmd[2] + ":" + cmd[4];
+						int nid = std::stoi(glob_app::cur_prj->fg_c->mParam["rcount"]);
+						glob_app::cur_prj->fg_c->mParam[std::string(RES_INDET) + std::to_string(nid)] = addr;
+						glob_app::cur_prj->fg_c->mParam["rcount"] = std::to_string(nid + 1);
+						glob_app::cur_prj->upt();
+					}
+					else {
+						std::cout << "Wrong action!" << std::endl;
+					}
+				}
+				else {
+					std::cout << "4 Arguments required: <act> <type> <id> <count>" << std::endl;
+				}
+			}),
+			command("rm", "Removing component /rm <mode> <id>", [](std::vector<std::string> cmd) {
+				if (cmd.size() > 2) {
+					if (cmd[1] == "i") {
+						int ln = std::stoi(glob_app::cur_prj->fg_c->mParam["icount"]);
+						int st = std::stoi(cmd[2]);
+						if (st < ln) {
+							std::string igt(ING_INDET);
+							glob_app::cur_prj->fg_c->mParam.erase(igt + cmd[2]);
+							std::map<std::string, std::string> clone = glob_app::cur_prj->fg_c->mParam;
+							for (std::pair<std::string, std::string> pr : clone) {
+								if (pr.first._Starts_with(igt)) {
+									int icd = std::stoi(pr.first.substr(igt.length()));
+									if (icd > st) {
+										icd--;
+										glob_app::cur_prj->fg_c->mParam[igt + std::to_string(icd)] = pr.second;
+									}
+								}
+							}
+							glob_app::cur_prj->fg_c->mParam.erase(igt + std::to_string(ln-1));
+							glob_app::cur_prj->fg_c->mParam["icount"] = std::to_string(ln-1);
+						}
+						else {
+							std::cout << "Please, enter valid id." << std::endl;
+						}
+					}
+					else if (cmd[1] == "r") {
+						int ln = std::stoi(glob_app::cur_prj->fg_c->mParam["rcount"]);
+						int st = std::stoi(cmd[2]);
+						if (st < ln) {
+							std::string igt(RES_INDET);
+							glob_app::cur_prj->fg_c->mParam.erase(igt + cmd[2]);
+							std::map<std::string, std::string> clone = glob_app::cur_prj->fg_c->mParam;
+							for (std::pair<std::string, std::string> pr : clone) {
+								if (pr.first._Starts_with(igt)) {
+									int icd = std::stoi(pr.first.substr(igt.length()));
+									if (icd > st) {
+										icd--;
+										glob_app::cur_prj->fg_c->mParam[igt + std::to_string(icd)] = pr.second;
+									}
+								}
+							}
+							glob_app::cur_prj->fg_c->mParam.erase(igt + std::to_string(ln - 1));
+							glob_app::cur_prj->fg_c->mParam["rcount"] = std::to_string(ln - 1);
+						}
+						else {
+							std::cout << "Please, enter valid id." << std::endl;
+						}
+					}
+					else {
+						std::cout << "Wrong action!" << std::endl;
+					}
+					glob_app::cur_prj->upt();
+				}
+				else {
+					std::cout << "2 Arguments required: <mode> <id>" << std::endl;
+				}
+			}),
+			command("title", "Sets default localisation name", [](std::vector<std::string> cmd) {
+				if (cmd.size() > 1) {
+					std::string line;
+					for (int i = 1; i < cmd.size(); i++) {
+						line += cmd[i] + " ";
+					}
+					line.pop_back();
+					glob_app::cur_prj->fg_c->mParam["title"] = line;
+					glob_app::cur_prj->upt();
+				}
+				else {
+					std::cout << "<Title> required." << std::endl;
+				}
+			})
+		}
 	}
 };
 
 std::map<std::string, e_component_type> nameLinker = {
 	{"info", e_component_type::mod_info},
 	{"cust", e_component_type::custom},
-	{"item", e_component_type::c_item}
+	{"item", e_component_type::c_item},
+	{"recipe", e_component_type::c_recipe}
 };
 
 component_t::component_t(std::string path, std::string str) {

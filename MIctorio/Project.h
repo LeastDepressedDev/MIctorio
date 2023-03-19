@@ -51,6 +51,8 @@ public:
 	uint8_t openFG(std::string);
 	bool isOpen();
 private:
+	//bool recompile = true;
+
 	void removeComp(size_t);
 	bool opened = false;
 	std::string projectPath;

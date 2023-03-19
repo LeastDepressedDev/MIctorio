@@ -11,12 +11,16 @@
 
 #include <filesystem>
 
+#include "recipe.h"
+
 std::map<e_component_type, std::string> compiler::links = {
-	{e_component_type::c_item, "items.lua"}
+	{e_component_type::c_item, "items.lua"},
+	{e_component_type::c_recipe, "recipes.lua"}
 };
 
 std::map<e_component_type, std::string> compiler::secNm = {
-	{e_component_type::c_item, "item-name"}
+	{e_component_type::c_item, "item-name"},
+	{e_component_type::c_recipe, "recipe-name"}
 };
 
 compiler::compiler(std::string prj_path, std::vector<component_t*> elems) {
@@ -114,6 +118,7 @@ void compiler::addLocale() {
 
 void compiler::prepMap() {
 	this->pred[e_component_type::c_item] = std::vector<std::string>(0);
+	this->pred[e_component_type::c_recipe] = std::vector<std::string>(0);
 }
 
 void compiler::compile() {
@@ -165,6 +170,9 @@ void compiler::compile() {
 				return true;
 			case e_component_type::c_item:
 				this->compItem(cmp);
+				return true;
+			case e_component_type::c_recipe:
+				this->compRecipe(cmp);
 				return true;
 			default:
 				return false;
@@ -261,6 +269,47 @@ void compiler::compItem(component_t* comp) {
 		}*/
 	}
 	lines.pop_back();
-	lines += "\n}\n";
+	lines += "\n}";
 	this->pred[e_component_type::c_item].push_back(lines);
+}
+
+void compiler::compRecipe(component_t* comp) {
+	std::vector<semi_rc> irg(std::stoi(comp->mParam["icount"])), rrg(std::stoi(comp->mParam["rcount"]));
+	for (std::pair<std::string, std::string> pr : comp->mParam) {
+		if (pr.first._Starts_with(ING_INDET)) {
+			int icd = std::stoi(pr.first.substr(std::string(ING_INDET).length()));
+			irg[icd] = parseRecStr(pr.second);
+		}
+		else if (pr.first._Starts_with(RES_INDET)) {
+			int icd = std::stoi(pr.first.substr(std::string(RES_INDET).length()));
+			rrg[icd] = parseRecStr(pr.second);
+		}
+	}
+
+	std::string line = "{\n";
+	line += "	name = \"" + comp->mParam["name"] + "\",\n";
+	line += "	type = \"" + comp->mParam["type"] + "\",\n";
+	line += "	category = \"" + comp->mParam["category"] + "\",\n";
+	//std::string ingr_str;
+	line += "	ingredients = {";
+	for (semi_rc rc : irg) {
+		line += "{type=\"" + rc.type + "\", name=\"" + rc.id + "\", amount=" + std::to_string(rc.count) + "},";
+	}
+	line.pop_back();
+	line += "},\n";
+	if (rrg.size() > 1) {
+		line += "	results = {";
+		for (semi_rc rc : rrg) {
+			line += "{type=\"" + rc.type + "\", name=\"" + rc.id + "\", amount=" + std::to_string(rc.count) + "},";
+		}
+		line.pop_back();
+		line += "},\n";
+	}
+	else {
+		line += "	result = \"" + irg[0].id + "\",\n";
+		line += "	result_count = " + std::to_string(irg[0].count) + ",\n";
+	}
+
+	line += "	enabled = " + comp->mParam["enabled"] + "\n}\n";
+	this->pred[e_component_type::c_recipe].push_back(line);
 }
