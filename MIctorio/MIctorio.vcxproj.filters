@@ -28,6 +28,9 @@
     <Filter Include="Исходные файлы\comp">
       <UniqueIdentifier>{975bee7c-599f-4446-b7d8-26e659429dc8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Исходные файлы\data">
+      <UniqueIdentifier>{e4d92915-be41-402a-95e6-13c6c07baeb7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="config.cpp">
@@ -85,6 +88,12 @@
     </ClInclude>
     <ClInclude Include="compiler.h">
       <Filter>Исходные файлы\comp</Filter>
+    </ClInclude>
+    <ClInclude Include="DataRaw.h">
+      <Filter>Исходные файлы\data</Filter>
+    </ClInclude>
+    <ClInclude Include="recipe.h">
+      <Filter>Исходные файлы\data</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
