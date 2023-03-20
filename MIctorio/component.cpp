@@ -66,6 +66,41 @@ std::map<e_component_type, std::vector<command>> eSet = {
 				else {
 					std::cout << "<Title> required." << std::endl;
 				}
+			}),
+			command("subgroup", "Sets subgroup(Required to render in the right recipe grid!)", [](std::vector<std::string> cmd) {
+				if (cmd.size() > 1) {
+					if ([cmd]() {
+						for (std::string st : factorio::item_subgroup) {
+							if (st == cmd[1]) {
+								return true;
+							}
+						}
+						return false;
+					}()) {
+						glob_app::cur_prj->fg_c->mParam["subgroup"] = cmd[1];
+						glob_app::cur_prj->upt();
+					}
+					else {
+						std::cout << "Wrong subgroup name!" << std::endl;
+						std::cout << "Allowed subgroups: " << std::endl;
+						std::string to_out;
+						for (int i = 0; i < factorio::item_subgroup.size(); i++) {
+							for (int j = 0; j < 5; j++) {
+								to_out += factorio::item_subgroup[i] + ", ";
+								i++;
+							}
+							to_out += "\n";
+						}
+						if (to_out[to_out.length() - 1] == '\n') {
+							to_out.pop_back();
+						}
+						to_out.pop_back(); to_out.pop_back();
+						std::cout << to_out << std::endl;
+					}
+				}
+				else {
+					std::cout << "<Title> required." << std::endl;
+				}
 			})
 		}
 	},
@@ -201,6 +236,41 @@ std::map<e_component_type, std::vector<command>> eSet = {
 				}
 				else {
 					std::cout << "2 Arguments required: <mode> <id>" << std::endl;
+				}
+			}),
+			command("subgroup", "Sets subgroup(Required to render in the right recipe grid!)", [](std::vector<std::string> cmd) {
+				if (cmd.size() > 1) {
+					if ([cmd]() {
+						for (std::string st : factorio::item_subgroup) {
+							if (st == cmd[1]) {
+								return true;
+							}
+						}
+						return false;
+					}()) {
+						glob_app::cur_prj->fg_c->mParam["subgroup"] = cmd[1];
+						glob_app::cur_prj->upt();
+					}
+					else {
+						std::cout << "Wrong subgroup name!" << std::endl;
+						std::cout << "Allowed subgroups: " << std::endl;
+						std::string to_out;
+						for (int i = 0; i < factorio::item_subgroup.size(); i++) {
+							for (int j = 0; j < 5; j++) {
+								to_out += factorio::item_subgroup[i] + ", ";
+								i++;
+							}
+							to_out += "\n";
+						}
+						if (to_out[to_out.length() - 1] == '\n') {
+							to_out.pop_back();
+						}
+						to_out.pop_back(); to_out.pop_back();
+						std::cout << to_out << std::endl;
+					}
+				}
+				else {
+					std::cout << "<Title> required." << std::endl;
 				}
 			}),
 			command("title", "Sets default localisation name", [](std::vector<std::string> cmd) {

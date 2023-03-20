@@ -237,6 +237,7 @@ std::map<std::string, std::string> Project::genDef(e_component_type type) {
 		smp["icount"] = "0";
 		smp["rcount"] = "0";
 		smp["enabled"] = "true";
+		smp["energy_required"] = "0.5";
 	}
 	return smp;
 }

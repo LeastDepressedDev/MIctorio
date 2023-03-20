@@ -258,7 +258,7 @@ std::string subl(std::string str) {
 void compiler::compItem(component_t* comp) {
 	std::string lines = "{\n";
 	std::string icon = "__" + this->mod_name + "__/grs" + subl(comp->mParam["icon"]);
-	lines += "	name = \"" + icon + "\",";
+	lines += "	icon = \"" + icon + "\",";
 	for (std::pair<std::string, std::string> pr : comp->mParam) {
 		if (pr.first == "icon") continue;
 		lines += "\n	" + pr.first;
@@ -276,6 +276,7 @@ void compiler::compItem(component_t* comp) {
 }
 
 void compiler::compRecipe(component_t* comp) {
+	
 	std::vector<semi_rc> irg(std::stoi(comp->mParam["icount"])), rrg(std::stoi(comp->mParam["rcount"]));
 	for (std::pair<std::string, std::string> pr : comp->mParam) {
 		if (pr.first._Starts_with(ING_INDET)) {
@@ -292,6 +293,7 @@ void compiler::compRecipe(component_t* comp) {
 	line += "	name = \"" + comp->mParam["name"] + "\",\n";
 	line += "	type = \"" + comp->mParam["type"] + "\",\n";
 	line += "	category = \"" + comp->mParam["category"] + "\",\n";
+	line += "	subgroup = \"" + comp->mParam["subgroup"] + "\",\n";
 	//std::string ingr_str;
 	line += "	ingredients = {";
 	for (semi_rc rc : irg) {
