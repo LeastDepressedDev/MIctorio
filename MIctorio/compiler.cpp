@@ -256,9 +256,11 @@ std::string subl(std::string str) {
 }
 
 void compiler::compItem(component_t* comp) {
-	std::string lines = "{";
-	comp->mParam["icon"] = "__" + this->mod_name + "__/grs" + subl(comp->mParam["icon"]);
+	std::string lines = "{\n";
+	std::string icon = "__" + this->mod_name + "__/grs" + subl(comp->mParam["icon"]);
+	lines += "	name = \"" + icon + "\",";
 	for (std::pair<std::string, std::string> pr : comp->mParam) {
+		if (pr.first == "icon") continue;
 		lines += "\n	" + pr.first;
 		lines += ((checkNumb(pr.second)) ? (" = " + pr.second + ",") : (" = \"" + pr.second + "\","));
 		/*if (checkNumb(pr.second)) {
@@ -306,8 +308,8 @@ void compiler::compRecipe(component_t* comp) {
 		line += "},\n";
 	}
 	else {
-		line += "	result = \"" + irg[0].id + "\",\n";
-		line += "	result_count = " + std::to_string(irg[0].count) + ",\n";
+		line += "	result = \"" + rrg[0].id + "\",\n";
+		line += "	result_count = " + std::to_string(rrg[0].count) + ",\n";
 	}
 
 	line += "	enabled = " + comp->mParam["enabled"] + "\n}\n";
