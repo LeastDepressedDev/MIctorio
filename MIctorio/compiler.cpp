@@ -209,7 +209,7 @@ bool cont(std::map<std::string, std::string> mp, std::string key) {
 
 bool checkNumb(std::string str) {
 	//return std::regex_match(str, std::regex("(\\d)\\w+")) || std::regex_match(str, std::regex("(\\d)"));
-	return std::regex_match(str, std::regex("^[0-9]*$"));
+	return std::regex_match(str, std::regex("^[0-9]*\\.*[0-9]*$"));
 }
 
 void compiler::compInfo(component_t* comp) {
