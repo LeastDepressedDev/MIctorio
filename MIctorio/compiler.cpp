@@ -232,9 +232,9 @@ void compiler::compInfo(component_t* comp) {
 
 void compiler::compCust(component_t* comp) {
 	std::ofstream of;
-	std::string s = comp->path.substr(0, comp->path.size() - 4) + ".lua";
-	fw::buildPth(this->outpath + "/" + s);
-	of.open(this->outpath + "/" + s);
+	//std::string s = comp->path.substr(0, comp->path.size() - 4) + ".lua";
+	fw::buildPth(this->outpath + "/" + comp->path);
+	of.open(this->outpath + "/" + comp->path);
 	std::ifstream f;
 	f.open(this->inpath + "/" + comp->path);
 	char buf;
@@ -245,7 +245,7 @@ void compiler::compCust(component_t* comp) {
 	}
 	of << line;
 	of.close();
-	tec.push_back(s);
+	tec.push_back(comp->path);
 }
 
 std::string subl(std::string str) {

@@ -165,13 +165,23 @@ void Project::newCmp(e_component_type ec) {
 	std::string name, path;
 	std::cout << "Name: ";
 	name = str_in();
-	std::cout << "Path(relative): ";
-	std::string in = str_in();
-	if (in.size() > 1) {
-		path = (in + '.' + COMPONENT_FILE_EXTENSION);
+	if (ec == e_component_type::custom) {
+		std::cout << "Path(full): ";
 	}
 	else {
-		path = (name + '.' + COMPONENT_FILE_EXTENSION);
+		std::cout << "Path(relative): ";
+	}
+	std::string in = str_in();
+	if (ec == e_component_type::custom) {
+		path = in;
+	}
+	else {
+		if (in.size() > 1) {
+			path = (in + '.' + COMPONENT_FILE_EXTENSION);
+		}
+		else {
+			path = (name + '.' + COMPONENT_FILE_EXTENSION);
+		}
 	}
 	
 	component_t* cmp = new component_t(path, name);
