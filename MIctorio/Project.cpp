@@ -75,7 +75,8 @@ void Project::upt() {
 			fw::upt((this->projectPath + SRC_DNAME + "/" + cmp->path).c_str(), cmp->mParam);
 		}
 		else {
-			const char* pth = (this->projectPath + cmp->path).c_str();
+			std::string pth = this->projectPath + SRC_DNAME + "/" + cmp->path;
+			fw::buildPth(pth);
 			std::ifstream f;
 			f.open(pth);
 			if (!f.is_open()) {
@@ -165,7 +166,13 @@ void Project::newCmp(e_component_type ec) {
 	std::cout << "Name: ";
 	name = str_in();
 	std::cout << "Path(relative): ";
-	path = (str_in() + '.' + COMPONENT_FILE_EXTENSION);
+	std::string in = str_in();
+	if (in.size() > 1) {
+		path = (in + '.' + COMPONENT_FILE_EXTENSION);
+	}
+	else {
+		path = (name + '.' + COMPONENT_FILE_EXTENSION);
+	}
 	
 	component_t* cmp = new component_t(path, name);
 	cmp->type = ec;

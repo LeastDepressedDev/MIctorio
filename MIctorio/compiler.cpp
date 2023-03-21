@@ -294,6 +294,7 @@ void compiler::compRecipe(component_t* comp) {
 	line += "	type = \"" + comp->mParam["type"] + "\",\n";
 	line += "	category = \"" + comp->mParam["category"] + "\",\n";
 	line += "	subgroup = \"" + comp->mParam["subgroup"] + "\",\n";
+	line += "	energy_required = " + comp->mParam["energy_required"] + ",\n";
 	//std::string ingr_str;
 	line += "	ingredients = {";
 	for (semi_rc rc : irg) {

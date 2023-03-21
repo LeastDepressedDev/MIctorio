@@ -238,6 +238,15 @@ std::map<e_component_type, std::vector<command>> eSet = {
 					std::cout << "2 Arguments required: <mode> <id>" << std::endl;
 				}
 			}),
+			command("speed", "Set's time, required to craft an item(<Double> value); value > => requiring more time", [](std::vector<std::string> cmd) {
+				if (cmd.size() > 1) {
+					glob_app::cur_prj->fg_c->mParam["energy_required"] = cmd[1];
+					glob_app::cur_prj->upt();
+				}
+				else {
+					std::cout << "<Title> required." << std::endl;
+				}
+			}),
 			command("subgroup", "Sets subgroup(Required to render in the right recipe grid!)", [](std::vector<std::string> cmd) {
 				if (cmd.size() > 1) {
 					if ([cmd]() {

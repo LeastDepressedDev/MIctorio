@@ -2,12 +2,11 @@
 
 #include <iostream>
 #include <vector>
-#include <list>
 #include <map>
 
 namespace factorio {
 
-	inline std::list<std::string> recipe_category = {
+	inline std::vector<std::string> recipe_category = {
 		"advanced-crafting",
 		"basic-crafting",
 		"centrifuging",
