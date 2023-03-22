@@ -7,6 +7,8 @@
 #include "compiler.h"
 #include <direct.h>
 
+#include "hd.h"
+
 Project::Project() {
 	this->comp = std::vector<component_t*>(0);
 }
@@ -30,10 +32,13 @@ bool Project::create(std::string pth) {
 	set["descr"] = info;
 	set["fstruct"] = gcfg::m_cfg["fstruct_name"];
 
-	fw::upt((pth + std::string(PRJ_FNAME)).c_str(), set);
+	fw::buildPth(pth);
 
+	_mkdir(pth.c_str());
 	_mkdir((pth + SRC_DNAME).c_str());
 	_mkdir((pth + SRC_DNAME + "/" + SPRITES_DNAME).c_str());
+
+	fw::upt((pth + std::string(PRJ_FNAME)).c_str(), set);
 	return this->open(pth);
 }
 
@@ -90,7 +95,8 @@ void Project::upt() {
 }
 
 void Project::removeComp(size_t i) {
-	std::remove((this->projectPath + this->comp[i]->path).c_str());
+	std::string pth = std::string(PROG_RM) + " " + (this->projectPath + this->comp[i]->path);
+	system(pth.c_str());
 	std::map<std::string, std::string> set = fw::read(this->info_file_path.c_str());
 	set.erase(this->fstr + this->comp[i]->name);
 	fw::upt(this->info_file_path.c_str(), set);

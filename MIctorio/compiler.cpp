@@ -49,6 +49,7 @@ void compiler::dataLua(std::vector<std::string> regs) {
 }
 
 void compiler::push(e_component_type type, std::vector<std::string> data) {
+	if (data.size() < 1) return;
 	std::string line = "data:extend({";
 	for (std::string comp : data) {
 		line += "\n" + comp + ",";
@@ -121,6 +122,19 @@ void compiler::prepMap() {
 	this->pred[e_component_type::c_recipe] = std::vector<std::string>(0);
 }
 
+std::string reb(std::string str) {
+	std::string ln;
+	for (int i = 0; i < str.length(); i++) {
+		if (str[i] == '/') {
+			ln += "\\\\";
+		}
+		else {
+			ln += str[i];
+		}
+	}
+	return ln;
+}
+
 void compiler::compile() {
 	system(PROG_CLR);
 
@@ -141,7 +155,14 @@ void compiler::compile() {
 	nm += "_" + comp->mParam["version"];
 	this->outpath = this->dpath + nm;
 
-	_rmdir(this->outpath.c_str());
+	std::filesystem::directory_entry dir(this->outpath);
+	if (dir.exists()) {
+		//std::cout << dir.path().string() << std::endl;
+		std::string cmd = std::string(PROG_RMDIR) + " /s " + reb(dir.path().string());
+		system(cmd.c_str());
+		//std::cout << "y" << std::flush;
+	}
+
 	_mkdir(this->outpath.c_str());
 	this->outGrapgh = (this->outpath + "/grs");
 	this->outLoc = (this->outpath + "/locale");
