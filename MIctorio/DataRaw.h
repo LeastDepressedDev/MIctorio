@@ -104,4 +104,8 @@ namespace factorio {
 		"virtual-signal-number",
 		"virtual-signal-special"
 	};
+
+	/*inline std::vector<std::string> recipe_category = {
+
+	};*/
 }
