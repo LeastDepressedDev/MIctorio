@@ -2,10 +2,30 @@
 #include "index.h"
 #include "fw_elem.h"
 #include "config.h"
+#include "DataRaw.h"
+
+#include <string>
 
 #include "Project.h"
 
 #include "hd.h"
+
+void shows(data_container<std::string> vec) {
+	std::cout << std::endl << "        " << vec.name << ": " << std::endl << std::endl;
+	for (int i = 0; i < vec.size(); i++) {
+		std::string pair = "                                                                                                                  ";
+		for (int j = 0; j < vec[i].length(); j++) {
+			pair[j] = vec[i][j];
+		}
+		i++;
+		if (i < vec.size()) {
+			for (int j = 0; j < vec[i].length(); j++) {
+				pair[pair.length()/2 + j] = vec[i][j];
+			}
+		}
+		std::cout << pair << std::endl;
+	}
+}
 
 std::map<e_cmd_section, std::vector<command>> CMDS = {
 	{e_cmd_section::mwind, 
@@ -218,6 +238,14 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 		{
 			command("clr", "Clear console window", [](std::vector<std::string> cmd) {
 				system(PROG_CLR);
+			}),
+			command("dLists|dlt", "Shows you DataRaw real-time container", [](std::vector<std::string> cmd) {
+				std::cout << std::endl << std::flush;
+				shows(factorio::actual::items);
+				shows(factorio::actual::fluids);
+				shows(factorio::actual::item_subgroup);
+				shows(factorio::actual::recipe_category);
+				shows(factorio::actual::recipes);
 			})
 		}
 	}
