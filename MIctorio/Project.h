@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <map>
+#include "DataRaw.h"
 #include <fstream>
 #include "component.h"
 #include <vector>
@@ -52,6 +53,8 @@ public:
 	bool isOpen();
 private:
 	//bool recompile = true;
+
+	void loadDataRaw();
 
 	void removeComp(size_t);
 	bool opened = false;

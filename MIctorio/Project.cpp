@@ -3,7 +3,6 @@
 #include "fw_elem.h"
 #include "config.h"
 #include "str_proc.h"
-#include "DataRaw.h"
 #include "compiler.h"
 #include <direct.h>
 
@@ -59,6 +58,8 @@ bool Project::open(std::string pth) {
 			addCmp(pr);
 		}
 	}
+	this->loadDataRaw();
+
 	this->opened = true;
 	return true;
 }
@@ -68,6 +69,7 @@ bool Project::isOpen() {
 }
 
 void Project::upt() {
+	printf("Updating indexes... \n");
 	std::map<std::string, std::string> set = fw::read(this->info_file_path.c_str());
 	for (component_t* cmp : this->comp) {
 		std::string cl1 = this->fstr + cmp->name, cl2 = component_t::tte(cmp->type) + ":" + cmp->path;
@@ -92,6 +94,17 @@ void Project::upt() {
 		}
 	}
 	fw::upt(this->info_file_path.c_str(), set);
+
+	this->loadDataRaw();
+
+	printf("Done!\n");
+}
+
+void Project::loadDataRaw() {
+	factorio::actual::def();
+	for (component_t* cmp_t : this->comp) {
+		factorio::actual::addObject(cmp_t->type, cmp_t->mParam["name"]);
+	}
 }
 
 void Project::removeComp(size_t i) {
@@ -239,14 +252,14 @@ std::map<std::string, std::string> Project::genDef(e_component_type type) {
 		smp["type"] = "recipe";
 		smp["title"] = smp["name"];
 		std::string rq_msg = "Category[";
-		for (std::string nm : factorio::recipe_category) {
+		for (std::string nm : factorio::actual::recipe_category) {
 			rq_msg += nm + ',';
 		}
 		rq_msg.pop_back();
 		rq_msg += "]: ";
 		std::string tmp_cat = str_in(rq_msg);
 		while ([tmp_cat](){
-			for (std::string key : factorio::recipe_category) {
+			for (std::string key : factorio::actual::recipe_category) {
 				if (tmp_cat == key) {
 					return false;
 				}
