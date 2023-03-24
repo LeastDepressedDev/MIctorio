@@ -70,7 +70,7 @@ std::map<e_component_type, std::vector<command>> eSet = {
 			command("subgroup", "Sets subgroup(Required to render in the right recipe grid!)", [](std::vector<std::string> cmd) {
 				if (cmd.size() > 1) {
 					if ([cmd]() {
-						for (std::string st : factorio::item_subgroup) {
+						for (std::string st : factorio::actual::item_subgroup) {
 							if (st == cmd[1]) {
 								return true;
 							}
@@ -84,9 +84,9 @@ std::map<e_component_type, std::vector<command>> eSet = {
 						std::cout << "Wrong subgroup name!" << std::endl;
 						std::cout << "Allowed subgroups: " << std::endl;
 						std::string to_out;
-						for (int i = 0; i < factorio::item_subgroup.size(); i++) {
+						for (int i = 0; i < factorio::actual::item_subgroup.size(); i++) {
 							for (int j = 0; j < 5; j++) {
-								to_out += factorio::item_subgroup[i] + ", ";
+								to_out += factorio::actual::item_subgroup[i] + ", ";
 								i++;
 							}
 							to_out += "\n";
@@ -140,12 +140,31 @@ std::map<e_component_type, std::vector<command>> eSet = {
 							}
 							return true;
 							}()) {
-							std::cout << "Incorrect recipe type. Allowed type: " << std::endl;
-							for (std::string tp : factorio::ingr_type) {
-								std::cout << tp << std::endl;
-							}
+							std::cout << "Incorrect recipe type. >dlt to help " << std::endl;
 							return;
 						}
+
+						if ([cmd]() {
+							if (cmd[2] == "item") {
+								for (std::string tp : factorio::actual::items) {
+									if (tp == cmd[3]) {
+										return false;
+									}
+								}
+							}
+							else if (cmd[2] == "fluid") {
+								for (std::string tp : factorio::actual::fluids) {
+									if (tp == cmd[3]) {
+										return false;
+									}
+								}
+							}
+							return true;
+							}()) {
+							std::cout << "Incorrect " << cmd[2] << " name. >dlt to help " << std::endl;
+							return;
+						}
+
 						std::string addr = cmd[3] + ":" + cmd[2] + ":" + cmd[4];
 						int nid = std::stoi(glob_app::cur_prj->fg_c->mParam["icount"]);
 						glob_app::cur_prj->fg_c->mParam[std::string(ING_INDET) + std::to_string(nid)] = addr;
@@ -167,6 +186,28 @@ std::map<e_component_type, std::vector<command>> eSet = {
 							}
 							return;
 						}
+
+						if ([cmd]() {
+							if (cmd[2] == "item") {
+								for (std::string tp : factorio::actual::items) {
+									if (tp == cmd[3]) {
+										return false;
+									}
+								}
+							}
+							else if (cmd[2] == "fluid") {
+								for (std::string tp : factorio::actual::fluids) {
+									if (tp == cmd[3]) {
+										return false;
+									}
+								}
+							}
+							return true;
+							}()) {
+							std::cout << "Incorrect " << cmd[2] << " name. >dlt to help " << std::endl;
+							return;
+						}
+
 						std::string addr = cmd[3] + ":" + cmd[2] + ":" + cmd[4];
 						int nid = std::stoi(glob_app::cur_prj->fg_c->mParam["rcount"]);
 						glob_app::cur_prj->fg_c->mParam[std::string(RES_INDET) + std::to_string(nid)] = addr;
@@ -250,7 +291,7 @@ std::map<e_component_type, std::vector<command>> eSet = {
 			command("subgroup", "Sets subgroup(Required to render in the right recipe grid!)", [](std::vector<std::string> cmd) {
 				if (cmd.size() > 1) {
 					if ([cmd]() {
-						for (std::string st : factorio::item_subgroup) {
+						for (std::string st : factorio::actual::item_subgroup) {
 							if (st == cmd[1]) {
 								return true;
 							}
@@ -264,9 +305,9 @@ std::map<e_component_type, std::vector<command>> eSet = {
 						std::cout << "Wrong subgroup name!" << std::endl;
 						std::cout << "Allowed subgroups: " << std::endl;
 						std::string to_out;
-						for (int i = 0; i < factorio::item_subgroup.size(); i++) {
+						for (int i = 0; i < factorio::actual::item_subgroup.size(); i++) {
 							for (int j = 0; j < 5; j++) {
-								to_out += factorio::item_subgroup[i] + ", ";
+								to_out += factorio::actual::item_subgroup[i] + ", ";
 								i++;
 							}
 							to_out += "\n";

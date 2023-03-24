@@ -5,11 +5,8 @@
 #include <vector>
 #include <iostream>
 #include "command.h"
+#include "DataRaw.h"
 #include <map>
-
-extern enum e_component_type {
-	unkown, custom, mod_info, c_item, c_recipe
-};
 
 extern std::map<e_component_type, std::vector<command>> eSet;
 
