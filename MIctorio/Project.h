@@ -11,18 +11,6 @@
 #include "component.h"
 #include <vector>
 
-/*
-	Project file structure:
-		index.prj
-		./src
-
-
-
-
-
-
-*/
-
 class Project {
 public:
 	//foreground component
@@ -52,8 +40,6 @@ public:
 	uint8_t openFG(std::string);
 	bool isOpen();
 private:
-	//bool recompile = true;
-
 	void loadDataRaw();
 
 	void removeComp(size_t);

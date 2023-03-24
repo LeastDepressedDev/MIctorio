@@ -158,7 +158,7 @@ void compiler::compile() {
 	std::filesystem::directory_entry dir(this->outpath);
 	if (dir.exists()) {
 		//std::cout << dir.path().string() << std::endl;
-		std::string cmd = std::string(PROG_RMDIR) + " /s " + reb(dir.path().string());
+		std::string cmd = std::string(PROG_RMDIR) + " /s \"" + reb(dir.path().string()) + "\"";
 		system(cmd.c_str());
 		//std::cout << "y" << std::flush;
 	}

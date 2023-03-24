@@ -5,7 +5,7 @@
 #include "inst.h"
 #include "config.h"
 
-#define WELCOME_MSG "######################################\n#       Mod Interface For Factorio   #\n#    by Sirtage(qigan)               #\n#          Made in Russia            #\n######################################\n Type >help to see for commands."
+#include "hd.h"
 
 Project* glob_app::cur_prj = new Project();
 e_cmd_section glob_app::stage = e_cmd_section::mwind;

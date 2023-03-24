@@ -96,7 +96,9 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 					std::cout << "Not enough arguments for project creation. Type `>prj help` for help" << std::endl;
 				}
 			}),
-			
+			command("about", "About this programm", [](std::vector<std::string> cmd) {
+				std::cout << glob_app::INC.title << " " << glob_app::INC.ver << " by " << glob_app::INC.author << std::endl;
+			}),
 				
 				
 				
@@ -237,6 +239,10 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 	{e_cmd_section::general,
 		{
 			command("clr", "Clear console window", [](std::vector<std::string> cmd) {
+				system(PROG_CLR);
+				std::cout << WELCOME_MSG << std::endl;
+			}),
+			command("fclr", "Clear console window", [](std::vector<std::string> cmd) {
 				system(PROG_CLR);
 			}),
 			command("dLists|dlt", "Shows you DataRaw real-time container", [](std::vector<std::string> cmd) {

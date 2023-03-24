@@ -16,7 +16,7 @@ bool Project::create(std::string pth) {
 	pth = fw::correct_path(pth);
 	std::string name, athr, ver, info;
 	std::cout << std::endl << "Name: ";
-	name = str_in();
+	std::cin >> name;
 	std::cout << "Author: ";
 	athr = str_in();
 	std::cout << "Version: ";
@@ -108,7 +108,7 @@ void Project::loadDataRaw() {
 }
 
 void Project::removeComp(size_t i) {
-	std::string pth = std::string(PROG_RM) + " " + (this->projectPath + this->comp[i]->path);
+	std::string pth = std::string(PROG_RM) + " \"" + (this->projectPath + this->comp[i]->path) + "\"";
 	system(pth.c_str());
 	std::map<std::string, std::string> set = fw::read(this->info_file_path.c_str());
 	set.erase(this->fstr + this->comp[i]->name);
@@ -181,6 +181,9 @@ uint8_t Project::openFG(std::string str) {
 }
 
 void Project::newCmp(e_component_type ec) {
+	if (ec == e_component_type::custom) {
+		std::cout << "Warning!\n" << "Custom objects are stays unchecked and may occure errors." << std::endl;
+	}
 	std::string name, path;
 	std::cout << "Name: ";
 	name = str_in();
