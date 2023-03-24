@@ -57,6 +57,9 @@
     <ClCompile Include="compiler.cpp">
       <Filter>Исходные файлы\comp</Filter>
     </ClCompile>
+    <ClCompile Include="data_container.h">
+      <Filter>Исходные файлы\data</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="command.h">

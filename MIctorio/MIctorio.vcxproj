@@ -22,6 +22,7 @@
     <ClCompile Include="compiler.cpp" />
     <ClCompile Include="component.cpp" />
     <ClCompile Include="config.cpp" />
+    <ClCompile Include="data_container.h" />
     <ClCompile Include="fw_elem.cpp" />
     <ClCompile Include="index.cpp" />
     <ClCompile Include="inst.cpp" />
