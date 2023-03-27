@@ -4,6 +4,11 @@
 #define WELCOME_MSG "######################################\n#       Mod Interface For Factorio   #\n#    by Sirtage(qigan)               #\n#          Made in Russia            #\n######################################\n Type >help to see for commands."
 #endif 
 
+#ifndef RECENT
+#define RECENT "r:"
+#endif 
+
+
 #ifdef _WIN32
 #define PROG_CLR "cls"
 #define PROG_RM "del"

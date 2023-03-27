@@ -39,6 +39,8 @@ public:
 	void openFG(component_t*);
 	uint8_t openFG(std::string);
 	bool isOpen();
+
+	std::string pth();
 private:
 	void loadDataRaw();
 

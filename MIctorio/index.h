@@ -8,6 +8,8 @@ namespace glob_app {
 	extern Project* cur_prj;
 	extern e_cmd_section stage;
 
+	extern std::vector<std::string> recent;
+
 	inline struct {
 		std::string title = "MIctorio";
 		std::string ver = "0.1a";

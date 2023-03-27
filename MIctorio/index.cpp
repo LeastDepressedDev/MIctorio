@@ -9,6 +9,7 @@
 
 Project* glob_app::cur_prj = new Project();
 e_cmd_section glob_app::stage = e_cmd_section::mwind;
+std::vector<std::string> glob_app::recent = std::vector<std::string>(0);
 
 std::string path_rend() {
 	std::string line = "";
@@ -21,11 +22,21 @@ std::string path_rend() {
 	return line + GEN_SEPARATOR;
 }
 
-void wrap () {}
+void wrap () {
+	size_t rec = std::stoi(gcfg::m_cfg["rec_f"]);
+	for (size_t i = 0; i < rec; i++) {
+		std::string lk = gcfg::m_cfg[std::string(RECENT) + std::to_string(i)];
+		if (lk.size() > 0) {
+			glob_app::recent.push_back(lk);
+		}
+	}
+}
 
 int main() {
-	std::cout << WELCOME_MSG << std::endl;
 	gcfg::init();
+	wrap();
+	system(PROG_CLR);
+	std::cout << WELCOME_MSG << std::endl;
 	while (true)
 	{
 		std::cout << path_rend();

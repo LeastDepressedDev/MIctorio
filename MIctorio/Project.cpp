@@ -68,6 +68,10 @@ bool Project::isOpen() {
 	return this->opened;
 }
 
+std::string Project::pth() {
+	return this->projectPath;
+}
+
 void Project::upt() {
 	printf("Updating indexes... \n");
 	std::map<std::string, std::string> set = fw::read(this->info_file_path.c_str());

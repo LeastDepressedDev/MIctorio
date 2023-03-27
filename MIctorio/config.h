@@ -1,4 +1,5 @@
 #pragma once
+
 #define CFG_FILE_NAME "index.cfg"
 
 #include <iostream>
@@ -12,4 +13,6 @@ namespace gcfg {
 	extern void update();
 	extern void exit();
 	extern void def();
+	
+	extern void recCall(std::string);
 }

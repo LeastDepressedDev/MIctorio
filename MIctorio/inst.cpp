@@ -62,7 +62,8 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 					else if (cmd[1] == "new") {
 						if (cmd.size() > 2) {
 							if (glob_app::cur_prj->create(cmd[2])) {
-								glob_app::stage = e_cmd_section::prj;
+								//gcfg::recCall(glob_app::cur_prj->pth());
+								glob_app::stage = e_cmd_section::prj;	
 							}
 						}
 						else {
@@ -72,6 +73,7 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 					else if (cmd[1] == "open") {
 						if (cmd.size() > 2) {
 							if (glob_app::cur_prj->open(cmd[2])) {
+								//gcfg::recCall(glob_app::cur_prj->pth());
 								glob_app::stage = e_cmd_section::prj;
 							}
 						}
@@ -91,9 +93,12 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 							std::cout << "Path required!" << std::endl;
 						}
 					}
+					else {
+						std::cout << "Wrong command. type >prj help" << std::endl;
+					}
 				}
 				else {
-					std::cout << "Not enough arguments for project creation. Type `>prj help` for help" << std::endl;
+					std::cout << "Not enough arguments. Type `>prj help` for help" << std::endl;
 				}
 			}),
 			command("about", "About this programm", [](std::vector<std::string> cmd) {
