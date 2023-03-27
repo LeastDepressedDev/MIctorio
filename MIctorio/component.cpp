@@ -345,7 +345,8 @@ std::map<std::string, e_component_type> nameLinker = {
 	{"info", e_component_type::mod_info},
 	{"cust", e_component_type::custom},
 	{"item", e_component_type::c_item},
-	{"recipe", e_component_type::c_recipe}
+	{"recipe", e_component_type::c_recipe},
+	{"virtual", e_component_type::virt}
 };
 
 component_t::component_t(std::string path, std::string str) {

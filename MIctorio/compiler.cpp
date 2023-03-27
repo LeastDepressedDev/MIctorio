@@ -180,7 +180,7 @@ void compiler::compile() {
 	int cob = 0;
 	for (component_t* cmp : this->comps) {
 		printf("Compiling %s: ", cmp->name.c_str());
-		if ([this, cmp]() {
+		if ([this, cmp, &cob]() {
 			switch (cmp->type)
 			{
 			case e_component_type::mod_info:
@@ -194,6 +194,9 @@ void compiler::compile() {
 				return true;
 			case e_component_type::c_recipe:
 				this->compRecipe(cmp);
+				return true;
+			case e_component_type::virt:
+				cob--;
 				return true;
 			default:
 				return false;

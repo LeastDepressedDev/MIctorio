@@ -146,7 +146,7 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 					for (std::pair<std::string, e_component_type> pr : nameLinker) {
 						if (cmd[1] == pr.first) {
 							glob_app::cur_prj->newCmp(pr.second);
-							if (pr.second != e_component_type::custom) {
+							if (pr.second != e_component_type::custom && pr.second != e_component_type::virt) {
 								glob_app::stage = e_cmd_section::elem;
 							}
 							return;
@@ -175,7 +175,7 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 						std::cout << "Invalid element name" << std::endl;
 						break;
 					case 3:
-						std::cout << "You can't open custom element" << std::endl;
+						std::cout << "You can't open custom/virtual element" << std::endl;
 						break;
 					default:
 						break;

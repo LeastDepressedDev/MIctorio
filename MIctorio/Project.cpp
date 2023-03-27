@@ -107,7 +107,8 @@ void Project::upt() {
 void Project::loadDataRaw() {
 	factorio::actual::def();
 	for (component_t* cmp_t : this->comp) {
-		factorio::actual::addObject(cmp_t->type, cmp_t->mParam["name"]);
+		if (cmp_t->type != virt) factorio::actual::addObject(cmp_t->type, cmp_t->mParam["name"]);
+		else factorio::actual::prot(cmp_t->mParam["proto"], cmp_t->mParam["name"]);
 	}
 }
 
@@ -172,8 +173,8 @@ void Project::openFG(component_t* cmp) {
 uint8_t Project::openFG(std::string str) {
 	for (component_t* c : this->comp) {
 		if (str == c->name) {
-			if (c->type == e_component_type::custom) {
-				return 2;
+			if (c->type == e_component_type::custom || c->type == e_component_type::virt) {
+				return 3;
 			}
 			else {
 				this->openFG(c); 
@@ -281,6 +282,10 @@ std::map<std::string, std::string> Project::genDef(e_component_type type) {
 		smp["rcount"] = "0";
 		smp["enabled"] = "true";
 		smp["energy_required"] = "0.5";
+	}
+	else if (type == e_component_type::virt) {
+		smp["name"] = str_in("Element id: ");
+		smp["proto"] = str_in("Prototype name: ");
 	}
 	return smp;
 }

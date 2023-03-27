@@ -1,9 +1,10 @@
 #pragma once
 #include <iostream>
 #include "data_container.h"
+//#include "component.h"
 
 extern enum e_component_type {
-	unkown, custom, mod_info, c_item, c_recipe
+	unkown, custom, virt, mod_info, c_item, c_recipe
 };
 
 namespace factorio {
@@ -501,6 +502,27 @@ namespace factorio {
 				nw[i] = vec[i];
 			}
 			return nw.sname(prev_name);
+		}
+
+		inline void prot(std::string proto, std::string id) {
+			if (proto == "item") {
+				items.push_back(id);
+			}
+			else if (proto == "fluid") {
+				fluids.push_back(id);
+			}
+			else if (proto == "item_subgroup") {
+				item_subgroup.push_back(id);
+			}
+			else if (proto == "recipe") {
+				recipes.push_back(id);
+			}
+			else if (proto == "recipe_category") {
+				recipes.push_back(id);
+			}
+			else {
+				std::cout << "Unsuported virual element!" << std::endl;
+			}
 		}
 
 		inline void addObject(e_component_type etype, std::string id) {
