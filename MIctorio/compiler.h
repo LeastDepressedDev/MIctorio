@@ -39,6 +39,7 @@ private:
 
 	void compInfo(component_t*);
 	void compCust(component_t*);
+	void compWit(component_t*);
 	void compItem(component_t*);
 	void compRecipe(component_t*);
 

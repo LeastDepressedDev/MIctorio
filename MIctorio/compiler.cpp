@@ -15,12 +15,14 @@
 
 std::map<e_component_type, std::string> compiler::links = {
 	{e_component_type::c_item, "items.lua"},
-	{e_component_type::c_recipe, "recipes.lua"}
+	{e_component_type::c_recipe, "recipes.lua"},
+	{e_component_type::wit, "wit.lua"}
 };
 
 std::map<e_component_type, std::string> compiler::secNm = {
 	{e_component_type::c_item, "item-name"},
-	{e_component_type::c_recipe, "recipe-name"}
+	{e_component_type::c_recipe, "recipe-name"},
+	{e_component_type::wit, "unsorted"},
 };
 
 compiler::compiler(std::string prj_path, std::vector<component_t*> elems) {
@@ -100,7 +102,18 @@ void compiler::addLocale() {
 	printf("Finding item names... ");
 	int i = 0;
 	for (component_t* cmp : this->comps) {
-		if (!(cmp->type == e_component_type::mod_info || cmp->type == e_component_type::custom)) {
+		if ([cmp](){
+			switch (cmp->type)
+			{
+			case e_component_type::custom:
+			case e_component_type::unkown:
+			case e_component_type::mod_info:
+			case e_component_type::virt:
+				return false;
+			default:
+				return true;
+			}
+			}()) {
 			locn[cmp->type] += cmp->mParam["name"] + "=" + cmp->mParam["title"] + "\n";
 			i++;
 		}
@@ -120,6 +133,8 @@ void compiler::addLocale() {
 void compiler::prepMap() {
 	this->pred[e_component_type::c_item] = std::vector<std::string>(0);
 	this->pred[e_component_type::c_recipe] = std::vector<std::string>(0);
+
+	this->pred[e_component_type::wit] = std::vector<std::string>(0);
 }
 
 std::string reb(std::string str) {
@@ -157,10 +172,8 @@ void compiler::compile() {
 
 	std::filesystem::directory_entry dir(this->outpath);
 	if (dir.exists()) {
-		//std::cout << dir.path().string() << std::endl;
 		std::string cmd = std::string(PROG_RMDIR) + " /s \"" + reb(dir.path().string()) + "\"";
 		system(cmd.c_str());
-		//std::cout << "y" << std::flush;
 	}
 
 	_mkdir(this->outpath.c_str());
@@ -197,6 +210,9 @@ void compiler::compile() {
 				return true;
 			case e_component_type::virt:
 				cob--;
+				return true;
+			case e_component_type::wit:
+				this->compWit(cmp);
 				return true;
 			default:
 				return false;
@@ -272,6 +288,17 @@ void compiler::compCust(component_t* comp) {
 	tec.push_back(comp->path);
 }
 
+void compiler::compWit(component_t* comp) {
+	std::string lines = "{";
+	for (std::pair<std::string, std::string> arg : comp->mParam) {
+		lines += "\n	" + arg.first;
+		lines += ((checkNumb(arg.second)) ? (" = " + arg.second + ",") : (" = \"" + arg.second + "\","));
+	}
+	lines.pop_back();
+	lines += "\n}";
+	this->pred[e_component_type::wit].push_back(lines);
+}
+
 std::string subl(std::string str) {
 	size_t sz = std::string(SPRITES_DNAME).length();
 	int x = str.find(SPRITES_DNAME, sz);
@@ -287,12 +314,6 @@ void compiler::compItem(component_t* comp) {
 		if (pr.first == "icon") continue;
 		lines += "\n	" + pr.first;
 		lines += ((checkNumb(pr.second)) ? (" = " + pr.second + ",") : (" = \"" + pr.second + "\","));
-		/*if (checkNumb(pr.second)) {
-			lines += "= " + pr.second + ",";
-		}
-		else {
-			"= \"" + pr.second + "\",";
-		}*/
 	}
 	lines.pop_back();
 	lines += "\n}";
