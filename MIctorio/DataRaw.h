@@ -4,7 +4,22 @@
 //#include "component.h"
 
 extern enum e_component_type {
-	unkown, custom, virt, mod_info, c_item, c_recipe
+	//unkow type
+	unkown, 
+	//custom type
+	custom, 
+	//without initialised type
+	wit,
+	//virtual type
+	virt, 
+	//mod info type
+	mod_info,
+
+	//compilables
+	//item type
+	c_item, 
+	//recipe type
+	c_recipe
 };
 
 namespace factorio {
