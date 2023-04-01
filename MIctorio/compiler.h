@@ -18,6 +18,8 @@ public:
 	static std::map<e_component_type, std::string> links;
 	static std::map<e_component_type, std::string> secNm;
 
+	int cob;
+
 	std::vector<component_t*> comps;
 	compiler(std::string prj_path, std::vector<component_t*> elems);
 
@@ -37,11 +39,14 @@ private:
 	void pushAll();
 	void push(e_component_type, std::vector<std::string>);
 
+	bool comph(component_t*);
+
 	void compInfo(component_t*);
 	void compCust(component_t*);
 	void compWit(component_t*);
 	void compItem(component_t*);
 	void compRecipe(component_t*);
+	void compHpar(component_t*);
 
 	void assetDeal(std::string);
 

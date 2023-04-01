@@ -347,7 +347,8 @@ std::map<std::string, e_component_type> nameLinker = {
 	{"item", e_component_type::c_item},
 	{"recipe", e_component_type::c_recipe},
 	{"virtual", e_component_type::virt},
-	{"wit", e_component_type::wit}
+	{"wit", e_component_type::wit},
+	{"hpar", e_component_type::hpar}
 };
 
 component_t::component_t(std::string path, std::string str) {
@@ -370,5 +371,6 @@ std::string component_t::tte(e_component_type e) {
 }
 
 std::vector<command> component_t::cmdRs() {
-	return eSet[glob_app::cur_prj->fg_c->type];
+	return glob_app::cur_prj->fg_c->type == e_component_type::hpar ? 
+		eSet[component_t::ebt(glob_app::cur_prj->fg_c->mParam["pclass"])] : eSet[glob_app::cur_prj->fg_c->type];
 }

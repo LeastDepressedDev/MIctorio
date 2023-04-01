@@ -190,36 +190,12 @@ void compiler::compile() {
 	printf("Done.\n");
 
 	printf("Compiling %d elements: \n", this->comps.size());
-	int cob = 0;
+	this->cob = 0;
 	for (component_t* cmp : this->comps) {
 		printf("Compiling %s: ", cmp->name.c_str());
-		if ([this, cmp, &cob]() {
-			switch (cmp->type)
-			{
-			case e_component_type::mod_info:
-				this->compInfo(cmp);
-				return true;
-			case e_component_type::custom:
-				this->compCust(cmp);
-				return true;
-			case e_component_type::c_item:
-				this->compItem(cmp);
-				return true;
-			case e_component_type::c_recipe:
-				this->compRecipe(cmp);
-				return true;
-			case e_component_type::virt:
-				cob--;
-				return true;
-			case e_component_type::wit:
-				this->compWit(cmp);
-				return true;
-			default:
-				return false;
-			}
-			}()) {
+		if (comph(cmp)) {
 			printf("success.\n");
-			cob++;
+			this->cob++;
 		}
 		else {
 			printf("error.\n");
@@ -236,6 +212,35 @@ void compiler::compile() {
 	printf("Transfering assets... \n");
 	this->assetDeal("");
 	printf("Done.\n");
+}
+
+bool compiler::comph(component_t* cmp) {
+	switch (cmp->type)
+	{
+	case e_component_type::mod_info:
+		this->compInfo(cmp);
+		return true;
+	case e_component_type::custom:
+		this->compCust(cmp);
+		return true;
+	case e_component_type::c_item:
+		this->compItem(cmp);
+		return true;
+	case e_component_type::c_recipe:
+		this->compRecipe(cmp);
+		return true;
+	case e_component_type::virt:
+		this->cob--;
+		return true;
+	case e_component_type::wit:
+		this->compWit(cmp);
+		return true;
+	case e_component_type::hpar:
+		this->compHpar(cmp);
+		return true;
+	default:
+		return false;
+	}
 }
 
 bool cont(std::map<std::string, std::string> mp, std::string key) {
@@ -362,4 +367,9 @@ void compiler::compRecipe(component_t* comp) {
 
 	line += "	enabled = " + comp->mParam["enabled"] + "\n}\n";
 	this->pred[e_component_type::c_recipe].push_back(line);
+}
+
+void compiler::compHpar(component_t* comp) {
+	comp->type = component_t::ebt(comp->mParam["pclass"]);
+	this->comph(comp);
 }

@@ -46,6 +46,7 @@ inline void callCmd(e_cmd_section sec, std::vector<std::string> cmd) {
 	}
 	std::vector<command> cmd_vec;
 	if (sec == e_cmd_section::elem) {
+		//if ()
 		for (command c : CMDS[sec]) {
 			std::vector<std::string> als = vec_split(c.sId, '|');
 			for (std::string a : als) {

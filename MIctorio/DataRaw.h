@@ -14,6 +14,8 @@ extern enum e_component_type {
 	virt, 
 	//mod info type
 	mod_info,
+	//New type class with parent
+	hpar,
 
 	//compilables
 	//item type
