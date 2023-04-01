@@ -12,7 +12,7 @@ This mod interface contains:
 - c_recipe - recipe type
 components.
 
-# Compilator
+# Compiler
 Built-in compilator works stable on every release, that means you can easily compile your mod without getting troubles and blah-blah-blah
 
 # ~~Gui~~
