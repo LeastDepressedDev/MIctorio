@@ -31,3 +31,6 @@ std::string str_in() {
 	}
 	return buf.substr(1, buf.length() - 2);
 }
+
+//template<typename _Type>
+//bool vec_cont(std::vector<_Type> vec, std::vector<_Type> args) 

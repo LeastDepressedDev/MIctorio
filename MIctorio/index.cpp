@@ -1,9 +1,13 @@
 #include <iostream>
+#include <Windows.h>
 #include <string>
 
 #include "index.h"
 #include "inst.h"
 #include "config.h"
+#include "str_proc.h"
+#include <fcntl.h>
+#include <io.h>
 
 #include "hd.h"
 
@@ -32,7 +36,7 @@ void wrap () {
 	}
 }
 
-int main() {
+int classic() {
 	gcfg::init();
 	wrap();
 	system(PROG_CLR);
@@ -44,3 +48,22 @@ int main() {
 		callCmd(glob_app::stage, vec_split(src, ' '));
 	}
 }
+
+int WINAPI WinMain(HINSTANCE hInst, HINSTANCE prevInst, LPSTR cmdln, int cmdOf) {
+	std::vector<std::string> args = vec_split(std::string(cmdln), ' ');
+	std::vector<std::string> gs = { "-c", "-classic" };
+	if (true/*vec_cont<std::string>(args, gs)*/) {
+		AllocConsole();
+		freopen("CONIN$", "r", stdin);
+		freopen("CONOUT$", "w", stdout);
+		freopen("CONOUT$", "w", stderr);
+		return classic();
+	}
+	else {
+		//there will be gui
+	}
+}
+
+//int main() {
+//	return classic();
+//}
