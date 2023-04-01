@@ -8,6 +8,16 @@
 
 #include "hd.h"
 
+std::string cutp(std::string mstr) {
+	std::string nstr;
+	size_t i = 0;
+	while (mstr[i] != ' ' && i < mstr.length()) {
+		nstr += mstr[i];
+		i++;
+	}
+	return nstr;
+}
+
 Project::Project() {
 	this->comp = std::vector<component_t*>(0);
 }
@@ -190,8 +200,7 @@ void Project::newCmp(e_component_type ec) {
 		std::cout << "Warning!\n" << "Custom objects are stays unchecked and may occure errors." << std::endl;
 	}
 	std::string name, path;
-	std::cout << "Name: ";
-	name = str_in();
+	name = cutp(str_in("Name: "));
 	if (ec == e_component_type::custom) {
 		std::cout << "Path(full): ";
 	}
@@ -286,6 +295,26 @@ std::map<std::string, std::string> Project::genDef(e_component_type type) {
 	else if (type == e_component_type::virt) {
 		smp["name"] = str_in("Element id: ");
 		smp["proto"] = str_in("Prototype name: ");
+	}
+	else if (type == e_component_type::hpar) {
+		std::string par;
+		par = str_in("Parrent class: ");
+		while ([par]() {
+			for (std::pair<std::string, e_component_type> pr : nameLinker) {
+				if (pr.first == par) {
+					return false;
+				}
+			}
+			return true;
+			}())
+		{
+			printf("Please, enter valid parent component name!\n");
+			par = str_in("Parrent class: ");
+		}
+		std::string tp = str_in("Type: ");
+		smp = this->genDef(component_t::ebt(par));
+		smp["type"] = tp;
+		smp["pclass"] = par;
 	}
 	return smp;
 }

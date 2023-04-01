@@ -225,7 +225,8 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 				for (command c : CMDS[e_cmd_section::elem]) {
 					std::cout << ":  prj" << GEN_SEPARATOR << "elem" << GEN_SEPARATOR << c.sId << " - " << c.sDesc << std::endl;
 				}
-				for (command c : eSet[glob_app::cur_prj->fg_c->type]) {
+				for (command c : ((glob_app::cur_prj->fg_c->type == e_component_type::hpar) ?
+					eSet[component_t::ebt(glob_app::cur_prj->fg_c->mParam["pclass"])] : eSet[glob_app::cur_prj->fg_c->type])) {
 					std::cout << ":  prj" << GEN_SEPARATOR << component_t::tte(glob_app::cur_prj->fg_c->type) 
 						<< GEN_SEPARATOR << c.sId << " - " << c.sDesc << std::endl;
 				}
