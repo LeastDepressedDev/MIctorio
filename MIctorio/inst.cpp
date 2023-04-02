@@ -213,7 +213,11 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 			}),
 			command("set", "Manually set key:value", [](std::vector<std::string> cmd) {
 				if (cmd.size() > 2) {
-					glob_app::cur_prj->fg_c->mParam[cmd[1]] = cmd[2];
+					std::string fin;
+					for (size_t i = 2; i < cmd.size(); i++) {
+						fin += cmd[i];
+					}
+					glob_app::cur_prj->fg_c->mParam[cmd[1]] = fin;
 					glob_app::cur_prj->upt();
 				}
 				else {
