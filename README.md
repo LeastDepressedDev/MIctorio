@@ -13,7 +13,7 @@ This mod interface contains:
 components.
 
 # Compiler
-Built-in compilator works stable on every release, that means you can easily compile your mod without getting troubles and blah-blah-blah
+Built-in compiler works stable on every release, that means you can easily compile your mod without getting troubles and blah-blah-blah
 
 # ~~Gui~~
 **Not comming soon**
