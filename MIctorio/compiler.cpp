@@ -297,7 +297,7 @@ void compiler::compWit(component_t* comp) {
 	std::string lines = "{";
 	for (std::pair<std::string, std::string> arg : comp->mParam) {
 		lines += "\n	" + arg.first;
-		lines += ((checkNumb(arg.second)) ? (" = " + arg.second + ",") : (" = \"" + arg.second + "\","));
+		lines += ((checkNumb(arg.second)) || (arg.second[0] == '{')) ? (" = " + arg.second + ",") : (" = \"" + arg.second + "\",");
 	}
 	lines.pop_back();
 	lines += "\n}";
@@ -318,7 +318,7 @@ void compiler::compItem(component_t* comp) {
 	for (std::pair<std::string, std::string> pr : comp->mParam) {
 		if (pr.first == "icon") continue;
 		lines += "\n	" + pr.first;
-		lines += ((checkNumb(pr.second)) ? (" = " + pr.second + ",") : (" = \"" + pr.second + "\","));
+		lines += ((checkNumb(pr.second)) || (pr.second[0] == '{')) ? (" = " + pr.second + ",") : (" = \"" + pr.second + "\",");
 	}
 	lines.pop_back();
 	lines += "\n}";
@@ -326,7 +326,6 @@ void compiler::compItem(component_t* comp) {
 }
 
 void compiler::compRecipe(component_t* comp) {
-	
 	std::vector<semi_rc> irg(std::stoi(comp->mParam["icount"])), rrg(std::stoi(comp->mParam["rcount"]));
 	for (std::pair<std::string, std::string> pr : comp->mParam) {
 		if (pr.first._Starts_with(ING_INDET)) {
@@ -370,6 +369,9 @@ void compiler::compRecipe(component_t* comp) {
 }
 
 void compiler::compHpar(component_t* comp) {
-	comp->type = component_t::ebt(comp->mParam["pclass"]);
-	this->comph(comp);
+	component_t* ncmp = new component_t(*comp);
+	ncmp->type = component_t::ebt(comp->mParam["pclass"]);
+	ncmp->mParam.erase("pclass");
+	this->comph(ncmp);
+	delete ncmp;
 }
