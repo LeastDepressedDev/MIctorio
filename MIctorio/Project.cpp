@@ -5,6 +5,7 @@
 #include "str_proc.h"
 #include "compiler.h"
 #include <direct.h>
+#include <filesystem>
 
 #include "hd.h"
 
@@ -25,14 +26,11 @@ Project::Project() {
 bool Project::create(std::string pth) {
 	pth = fw::correct_path(pth);
 	std::string name, athr, ver, info;
-	std::cout << std::endl << "Name: ";
-	std::cin >> name;
-	std::cout << "Author: ";
-	athr = str_in();
-	std::cout << "Version: ";
-	ver = str_in();
-	std::cout << "Description: ";
-	info = str_in();
+	std::cout << std::endl;
+	name = vec_split(str_in("Name: "), ' ')[0];
+	athr = str_in("Author: ");
+	ver = vec_split(str_in("Version: "), ' ')[0];
+	info = str_in("Description: ");
 
 	std::map<std::string, std::string> set;
 	set["name"] = name;
@@ -55,6 +53,10 @@ bool Project::open(std::string pth) {
 	pth = fw::correct_path(pth);
 	this->projectPath = pth;
 	this->info_file_path = (pth + std::string(PRJ_FNAME));
+	if (!std::filesystem::exists(this->info_file_path)) {
+		std::cout << PRJ_FNAME << " file not found!" << std::endl;
+		return false;
+	};
 	std::map<std::string, std::string> set = fw::read(this->info_file_path.c_str());
 
 	this->name = set["name"];
@@ -248,6 +250,7 @@ void Project::newCmp(e_component_type ec) {
 
 std::map<std::string, std::string> Project::genDef(e_component_type type) {
 	std::map<std::string, std::string> smp;
+	smp["incl"] = "t";
 	if (type == e_component_type::mod_info) {
 		smp["name"] = this->name;
 		smp["version"] = this->ver;
