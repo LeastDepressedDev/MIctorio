@@ -214,29 +214,37 @@ void compiler::compile() {
 	printf("Done.\n");
 }
 
-bool compiler::comph(component_t* cmp) {
+bool compiler::comph(component_t* comp) {
+	component_t* cmp = new component_t(*comp);
 	switch (cmp->type)
 	{
 	case e_component_type::mod_info:
 		this->compInfo(cmp);
+		delete cmp;
 		return true;
 	case e_component_type::custom:
 		this->compCust(cmp);
+		delete cmp;
 		return true;
 	case e_component_type::c_item:
 		this->compItem(cmp);
+		delete cmp;
 		return true;
 	case e_component_type::c_recipe:
 		this->compRecipe(cmp);
+		delete cmp;
 		return true;
 	case e_component_type::virt:
 		this->cob--;
+		delete cmp;
 		return true;
 	case e_component_type::wit:
 		this->compWit(cmp);
+		delete cmp;
 		return true;
 	case e_component_type::hpar:
 		this->compHpar(cmp);
+		delete cmp;
 		return true;
 	default:
 		return false;
@@ -369,9 +377,7 @@ void compiler::compRecipe(component_t* comp) {
 }
 
 void compiler::compHpar(component_t* comp) {
-	component_t* ncmp = new component_t(*comp);
-	ncmp->type = component_t::ebt(comp->mParam["pclass"]);
-	ncmp->mParam.erase("pclass");
-	this->comph(ncmp);
-	delete ncmp;
+	comp->type = component_t::ebt(comp->mParam["pclass"]);
+	comp->mParam.erase("pclass");
+	this->comph(comp);
 }
