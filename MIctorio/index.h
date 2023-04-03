@@ -13,7 +13,7 @@ namespace glob_app {
 
 	inline struct {
 		std::string title = "MIctorio";
-		std::string ver = "0.1a";
+		std::string ver = "0.1.1";
 		std::string author = "Sirtage(aka qigan)";
 	} INC;
 }
