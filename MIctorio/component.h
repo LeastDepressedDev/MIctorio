@@ -26,5 +26,4 @@ public:
 
 	static e_component_type ebt(std::string);
 	static std::string tte(e_component_type);
-
 };

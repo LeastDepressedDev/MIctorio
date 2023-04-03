@@ -154,6 +154,23 @@ bool Project::rmCmpByPath(std::string pth) {
 	return false;
 }
 
+bool Project::rept(std::string cName, std::string val) {
+	component_t* cmp = nullptr;
+	for (component_t* pc : this->comp) {
+		if (pc->name == cName) {
+			cmp = pc;
+			break;
+		}
+	}
+	if (cmp != nullptr) {
+		if (cmp->mParam["incl"] != val) {
+			cmp->mParam["incl"] = val;
+			return true;
+		}
+	}
+	return false;
+}
+
 void Project::addCmp(std::pair<std::string, std::string> pr) {
 	std::string nm = pr.first.substr(this->fstr.length());
 	std::string type = "", file = "";

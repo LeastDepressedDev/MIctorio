@@ -137,7 +137,7 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 				printf_s("Components(%d): \n", comps.size());
 				for (component_t* cmp : comps) {
 					component_t vcmp = *cmp;
-					std::cout << vcmp.name << " : " << component_t::tte(vcmp.type) << " : " << vcmp.path << std::endl;
+					std::cout << vcmp.name << " : " << component_t::tte(vcmp.type) << " : " << vcmp.path << ((vcmp.mParam["incl"] != "t") ? " # excluded!" : "") << std::endl;
 				}
 				std::cout << ";" << std::endl;
 			}),
@@ -189,6 +189,32 @@ std::map<e_cmd_section, std::vector<command>> CMDS = {
 				if (cmd.size() > 1) {
 					if (!glob_app::cur_prj->rmCmp(cmd[1])) {
 						std::cout << "Unable to delete this element or it's just doesn't exist." << std::endl;
+					}
+				}
+				else {
+					std::cout << "Element name required." << std::endl;
+				}
+			}),
+			command("include", "Include elemnt into the compilation list", [](std::vector<std::string> cmd) {
+				if (cmd.size() > 1) {
+					if (glob_app::cur_prj->rept(cmd[1], "t")) {
+						glob_app::cur_prj->upt();
+					}
+					else {
+						std::cout << "Element doesn't exists or already included." << std::endl;
+					}
+				}
+				else {
+					std::cout << "Element name required." << std::endl;
+				}
+			}),
+			command("exclude", "Exclude elemnt from the compilation list", [](std::vector<std::string> cmd) {
+				if (cmd.size() > 1) {
+					if (glob_app::cur_prj->rept(cmd[1], "f")) {
+						glob_app::cur_prj->upt();
+					}
+					else {
+						std::cout << "Element doesn't exists or already excluded." << std::endl;
 					}
 				}
 				else {

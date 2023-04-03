@@ -215,7 +215,12 @@ void compiler::compile() {
 }
 
 bool compiler::comph(component_t* comp) {
+	if (comp->mParam["incl"] != "t") {
+		printf("excluded: ");
+		return true;
+	}
 	component_t* cmp = new component_t(*comp);
+	cmp->mParam.erase("incl");
 	switch (cmp->type)
 	{
 	case e_component_type::mod_info:

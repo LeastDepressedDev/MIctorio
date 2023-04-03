@@ -40,6 +40,8 @@ public:
 	uint8_t openFG(std::string);
 	bool isOpen();
 
+	bool rept(std::string, std::string);
+
 	std::string pth();
 private:
 	void loadDataRaw();
