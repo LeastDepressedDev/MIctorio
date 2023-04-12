@@ -21,7 +21,9 @@ extern enum e_component_type {
 	//item type
 	c_item, 
 	//recipe type
-	c_recipe
+	c_recipe,
+	//entity
+	c_entity
 };
 
 namespace factorio {

@@ -348,6 +348,20 @@ std::map<std::string, std::string> Project::genDef(e_component_type type) {
 		smp["pclass"] = par;
 		break;
 	}
+	case e_component_type::c_entity:
+	{
+		smp["name"] = str_in("Entity id: ");
+		smp["icon"] = this->projectPath + SRC_DNAME + "/" + SPRITES_DNAME + "/" + str_in("Icon path(start's from src/spts directory): ");
+		smp["icon_size"] = "32";
+		smp["icon_mipmaps"] = "4";
+		smp["type"] = "entity";
+		smp["title"] = smp["name"];
+
+		smp["drawing_box"] = "{{-0.5, -0.5}, {0.5, 0.5}}";
+		smp["sticker_box"] = "{{-0.5, -0.5}, {0.5, 0.5}}";
+		smp["collision_box"] = "{{-0.5, -0.5}, {0.5, 0.5}}";
+		break;
+	}
 	}
 	return smp;
 }
