@@ -268,14 +268,19 @@ void Project::newCmp(e_component_type ec) {
 std::map<std::string, std::string> Project::genDef(e_component_type type) {
 	std::map<std::string, std::string> smp;
 	smp["incl"] = "t";
-	if (type == e_component_type::mod_info) {
+	switch (type)
+	{
+	case e_component_type::mod_info:
+	{
 		smp["name"] = this->name;
 		smp["version"] = this->ver;
 		smp["title"] = this->name;
 		smp["author"] = this->author;
 		smp["factorio_version"] = "1.1";
+		break;
 	}
-	else if (type == e_component_type::c_item) {
+	case e_component_type::c_item:
+	{
 		smp["name"] = str_in("Item ID: ");
 		smp["icon"] = this->projectPath + SRC_DNAME + "/" + SPRITES_DNAME + "/" + str_in("Icon path(start's from src/spts directory): ");
 		smp["title"] = smp["name"];
@@ -283,8 +288,10 @@ std::map<std::string, std::string> Project::genDef(e_component_type type) {
 		smp["icon_size"] = "32";
 		smp["icon_mipmaps"] = "4";
 		smp["stack_size"] = "100";
+		break;
 	}
-	else if (type == e_component_type::c_recipe) {
+	case e_component_type::c_recipe:
+	{
 		smp["name"] = str_in("Recipe ID: ");
 		smp["type"] = "recipe";
 		smp["title"] = smp["name"];
@@ -295,7 +302,7 @@ std::map<std::string, std::string> Project::genDef(e_component_type type) {
 		rq_msg.pop_back();
 		rq_msg += "]: ";
 		std::string tmp_cat = str_in(rq_msg);
-		while ([tmp_cat](){
+		while ([tmp_cat]() {
 			for (std::string key : factorio::actual::recipe_category) {
 				if (tmp_cat == key) {
 					return false;
@@ -311,12 +318,16 @@ std::map<std::string, std::string> Project::genDef(e_component_type type) {
 		smp["rcount"] = "0";
 		smp["enabled"] = "true";
 		smp["energy_required"] = "0.5";
+		break;
 	}
-	else if (type == e_component_type::virt) {
+	case e_component_type::virt:
+	{
 		smp["name"] = str_in("Element id: ");
 		smp["proto"] = str_in("Prototype name: ");
+		break;
 	}
-	else if (type == e_component_type::hpar) {
+	case e_component_type::hpar:
+	{
 		std::string par;
 		par = str_in("Parrent class: ");
 		while ([par]() {
@@ -335,6 +346,8 @@ std::map<std::string, std::string> Project::genDef(e_component_type type) {
 		smp = this->genDef(component_t::ebt(par));
 		smp["type"] = tp;
 		smp["pclass"] = par;
+		break;
+	}
 	}
 	return smp;
 }
