@@ -16,12 +16,14 @@
 std::map<e_component_type, std::string> compiler::links = {
 	{e_component_type::c_item, "items.lua"},
 	{e_component_type::c_recipe, "recipes.lua"},
+	{e_component_type::c_entity, "entity.lua"},
 	{e_component_type::wit, "wit.lua"}
 };
 
 std::map<e_component_type, std::string> compiler::secNm = {
 	{e_component_type::c_item, "item-name"},
 	{e_component_type::c_recipe, "recipe-name"},
+	{e_component_type::c_entity, "entity-name"},
 	{e_component_type::wit, "unsorted"},
 };
 
@@ -133,6 +135,7 @@ void compiler::addLocale() {
 void compiler::prepMap() {
 	this->pred[e_component_type::c_item] = std::vector<std::string>(0);
 	this->pred[e_component_type::c_recipe] = std::vector<std::string>(0);
+	this->pred[e_component_type::c_entity] = std::vector<std::string>(0);
 
 	this->pred[e_component_type::wit] = std::vector<std::string>(0);
 }
@@ -251,6 +254,10 @@ bool compiler::comph(component_t* comp) {
 		this->compHpar(cmp);
 		delete cmp;
 		return true;
+	case e_component_type::c_entity:
+		this->compEntity(cmp);
+		delete cmp;
+		return true;
 	default:
 		return false;
 	}
@@ -328,8 +335,8 @@ void compiler::compItem(component_t* comp) {
 	std::string lines = "{\n";
 	std::string icon = "__" + this->mod_name + "__/grs" + subl(comp->mParam["icon"]);
 	lines += "	icon = \"" + icon + "\",";
+	comp->mParam.erase("icon");
 	for (std::pair<std::string, std::string> pr : comp->mParam) {
-		if (pr.first == "icon") continue;
 		lines += "\n	" + pr.first;
 		lines += ((checkNumb(pr.second)) || (pr.second[0] == '{')) ? (" = " + pr.second + ",") : (" = \"" + pr.second + "\",");
 	}
@@ -385,4 +392,19 @@ void compiler::compHpar(component_t* comp) {
 	comp->type = component_t::ebt(comp->mParam["pclass"]);
 	comp->mParam.erase("pclass");
 	this->comph(comp);
+}
+
+void compiler::compEntity(component_t* comp) {
+	std::string line = "{\n";
+	line += "	name = \"" + comp->mParam["name"] + "\",\n";
+	line += "	type = \"" + comp->mParam["type"] + "\",\n";
+	comp->mParam.erase("name");
+	comp->mParam.erase("type");
+	for (std::pair<std::string, std::string> pr : comp->mParam) {
+		line += "\n	" + pr.first;
+		line += ((checkNumb(pr.second)) || (pr.second[0] == '{')) ? (" = " + pr.second + ",") : (" = \"" + pr.second + "\",");
+	}
+	line.pop_back();
+	line += "\n}";
+	this->pred[e_component_type::c_entity].push_back(line);
 }

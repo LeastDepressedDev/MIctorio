@@ -338,6 +338,24 @@ std::map<e_component_type, std::vector<command>> eSet = {
 				}
 			})
 		}
+	},
+	{e_component_type::c_entity, 
+		{
+			command("title", "Sets default localisation name", [](std::vector<std::string> cmd) {
+				if (cmd.size() > 1) {
+					std::string line;
+					for (int i = 1; i < cmd.size(); i++) {
+						line += cmd[i] + " ";
+					}
+					line.pop_back();
+					glob_app::cur_prj->fg_c->mParam["title"] = line;
+					glob_app::cur_prj->upt();
+				}
+				else {
+					std::cout << "<Title> required." << std::endl;
+				}
+			})
+		}
 	}
 };
 

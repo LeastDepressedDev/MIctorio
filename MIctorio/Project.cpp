@@ -9,6 +9,31 @@
 
 #include "hd.h"
 
+e_entity_type etcr() {
+	std::string ctr = "[";
+	for (std::pair<e_entity_type, std::string> t : e_proto_name) {
+		ctr += t.second + ", ";
+	}
+	ctr.pop_back(); ctr.pop_back();
+	ctr += "]";
+	//uh... ye... Im to lazy to put lambda in here, so i put goto here xd
+	e_entity_type type = idk_lol;
+	sect:
+	std::string rt = str_in("Entity type" + ctr + ": ");
+	for (std::pair<e_entity_type, std::string> t : e_proto_name) {
+		if (rt == t.second) {
+			type = t.first;
+			break;
+		}
+	}
+	if (type == idk_lol) {
+		printf("Wrong type! Please enter correct type.\n");
+		goto sect;
+	}
+
+	return type;
+}
+
 std::string cutp(std::string mstr) {
 	std::string nstr;
 	size_t i = 0;
@@ -243,6 +268,12 @@ void Project::newCmp(e_component_type ec) {
 	cmp->type = ec;
 	cmp->mParam = genDef(cmp->type);
 
+	if (cmp->mParam["type"].size() == 0 || cmp->mParam["proto"].size() == 0) {
+		printf("Error! LOL\n");
+		delete cmp;
+		return;
+	}
+
 	std::string pth = this->projectPath + SRC_DNAME + "/" + cmp->path;
 
 	fw::buildPth(pth);
@@ -354,7 +385,28 @@ std::map<std::string, std::string> Project::genDef(e_component_type type) {
 		smp["icon"] = this->projectPath + SRC_DNAME + "/" + SPRITES_DNAME + "/" + str_in("Icon path(start's from src/spts directory): ");
 		smp["icon_size"] = "32";
 		smp["icon_mipmaps"] = "4";
-		smp["type"] = "entity";
+
+		e_entity_type type = etcr();
+		switch (type)
+		{
+		case idk_lol:
+			printf("Some shitty error occured!\n");
+			return smp;
+		case building:
+			{
+				smp["type"] = "item-entity";
+				smp["flags"] = "{\"placeable-off-grid\", \"not-on-map\"}";
+				smp["minable"] = "{mining_time = 0.025}";
+			}
+			break;
+		case mob:
+			printf("Temporary disabled");
+			smp["type"] = "simple-entity";
+			return smp;
+			break;
+		}
+
+		
 		smp["title"] = smp["name"];
 
 		smp["drawing_box"] = "{{-0.5, -0.5}, {0.5, 0.5}}";

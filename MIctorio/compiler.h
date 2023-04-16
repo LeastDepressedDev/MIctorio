@@ -47,6 +47,7 @@ private:
 	void compItem(component_t*);
 	void compRecipe(component_t*);
 	void compHpar(component_t*);
+	void compEntity(component_t*);
 
 	void assetDeal(std::string);
 
