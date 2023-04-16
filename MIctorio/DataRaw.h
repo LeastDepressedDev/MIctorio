@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <map>
 #include "data_container.h"
 //#include "component.h"
 
@@ -25,6 +26,14 @@ extern enum e_component_type {
 	//entity
 	c_entity
 };
+
+extern enum e_entity_type : uint16_t {
+	idk_lol = 0U,
+	building = 1U,
+	mob = 2U
+};
+
+inline std::map<e_entity_type, std::string> e_proto_name = {{building, "item-entity"}, {mob, "simple-entity"}};
 
 namespace factorio {
 	namespace source {
