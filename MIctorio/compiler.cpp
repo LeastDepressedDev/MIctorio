@@ -155,7 +155,6 @@ std::string reb(std::string str) {
 
 void compiler::compile() {
 	system(PROG_CLR);
-
 	printf("Compiling...\n");
 	printf("Preparing output folder...\n");
 	component_t* comp = this->getInfo();
@@ -178,6 +177,8 @@ void compiler::compile() {
 		std::string cmd = std::string(PROG_RMDIR) + " /s \"" + reb(dir.path().string()) + "\"";
 		system(cmd.c_str());
 	}
+
+	auto begin = std::chrono::steady_clock::now();
 
 	_mkdir(this->outpath.c_str());
 	this->outGrapgh = (this->outpath + "/grs");
@@ -215,6 +216,8 @@ void compiler::compile() {
 	printf("Transfering assets... \n");
 	this->assetDeal("");
 	printf("Done.\n");
+	auto et = double(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin).count())/1000;
+	printf("Compilation finishing in %f seconds... \n", et);
 }
 
 bool compiler::comph(component_t* comp) {
