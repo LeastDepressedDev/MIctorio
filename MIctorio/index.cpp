@@ -50,13 +50,22 @@ int classic() {
 }
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE prevInst, LPSTR cmdln, int cmdOf) {
-	std::vector<std::string> args = vec_split(std::string(cmdln), ' ');
+	int sz;
+	LPWSTR* argv = CommandLineToArgvW(GetCommandLine(), &sz);
+
+	std::vector<std::string> args(0);
+
+	for (int i = 0; i < sz; i++) {
+		args.push_back(std::string((const char*) argv[i]));
+	}
+
 	std::vector<std::string> gs = { "-c", "-classic" };
 	if (true/*vec_cont<std::string>(args, gs)*/) {
 		AllocConsole();
 		freopen("CONIN$", "r", stdin);
 		freopen("CONOUT$", "w", stdout);
 		freopen("CONOUT$", "w", stderr);
+		for (std::string s : args) std::cout << s << std::endl;
 		return classic();
 	}
 	else {
