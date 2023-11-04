@@ -268,7 +268,7 @@ void Project::newCmp(e_component_type ec) {
 	cmp->type = ec;
 	cmp->mParam = genDef(cmp->type);
 
-	if (cmp->mParam["type"].size() == 0 || cmp->mParam["proto"].size() == 0) {
+	if ((cmp->mParam["type"].size() == 0 && cmp->type != e_component_type::custom) || (cmp->mParam["proto"].size() == 0 && cmp->type == e_component_type::virt)) {
 		printf("Error! LOL\n");
 		delete cmp;
 		return;
@@ -308,6 +308,7 @@ std::map<std::string, std::string> Project::genDef(e_component_type type) {
 		smp["title"] = this->name;
 		smp["author"] = this->author;
 		smp["factorio_version"] = "1.1";
+		smp["type"] = "modinfo";
 		break;
 	}
 	case e_component_type::c_item:
